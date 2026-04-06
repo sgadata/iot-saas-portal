@@ -130,3 +130,104 @@ body {
 .leaflet-control-attribution {
   filter: invert(100%) hue-rotate(180deg) brightness(95%) contrast(90%);
 }
+
+/* --- Responsive Design (Fase 10) --- */
+@media (max-width: 768px) {
+  .app-container {
+    flex-direction: column;
+  }
+
+  .sidebar {
+    position: fixed;
+    top: 0;
+    left: -250px;
+    height: 100vh;
+    z-index: 1000;
+    transition: left 0.3s ease;
+    width: 250px;
+  }
+
+  .sidebar.open {
+    left: 0;
+  }
+
+  .sidebar-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0,0,0,0.5);
+    z-index: 999;
+    display: none;
+  }
+
+  .sidebar-overlay.visible {
+    display: block;
+  }
+
+  .top-header {
+    padding: 0 1rem;
+    justify-content: space-between;
+  }
+
+  .page-content {
+    padding: 1rem;
+  }
+
+  .card-value {
+    font-size: 1.5rem;
+  }
+
+  /* Responsive Grid for Dashboards */
+  .dashboard-grid {
+    grid-template-columns: 1fr !important;
+  }
+
+  .mobile-only {
+    display: block !important;
+  }
+}
+
+/* --- Login Styles (Fase 10) --- */
+.login-container {
+  display: flex;
+  height: 100vh;
+  width: 100vw;
+  background-color: var(--bg-primary);
+  overflow: hidden;
+}
+
+.login-brand-section {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 4rem;
+  position: relative;
+  background: linear-gradient(135deg, rgba(8,15,37,1) 0%, rgba(15,23,42,1) 100%);
+}
+
+.login-form-section {
+  flex: 0 0 500px;
+  background-color: var(--bg-secondary);
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  box-shadow: -10px 0 30px rgba(0,0,0,0.5);
+  border-left: 1px solid var(--border-color);
+  z-index: 2;
+}
+
+@media (max-width: 992px) {
+  .login-brand-section {
+    display: none;
+  }
+  .login-form-section {
+    flex: 1;
+    border-left: none;
+  }
+}
+
+
+

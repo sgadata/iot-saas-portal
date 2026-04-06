@@ -32,7 +32,7 @@ export default function AdminDashboard() {
       </div>
 
       {/* KPI Cards */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '1.5rem' }}>
+      <div className="dashboard-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '1.5rem' }}>
         {kpis.map((kpi, idx) => (
           <div key={idx} className="card" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
             <div>
@@ -47,7 +47,7 @@ export default function AdminDashboard() {
       </div>
 
       {/* Recent Alerts & Quick Actions */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'minmax(300px, 2fr) minmax(300px, 1fr)', gap: '1.5rem' }}>
+      <div className="dashboard-grid" style={{ display: 'grid', gridTemplateColumns: 'minmax(300px, 2fr) minmax(300px, 1fr)', gap: '1.5rem' }}>
         <div className="card">
           <h3 style={{ fontSize: '1.125rem', marginBottom: '1.25rem', borderBottom: '1px solid var(--border-color)', paddingBottom: '0.75rem' }}>{t('dashboard.recentAlerts')}</h3>
           <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>

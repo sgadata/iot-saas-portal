@@ -36,7 +36,7 @@ export default function FleetExplorer() {
 
   return (
     <div className="animate-fade-in" style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+      <div className="dashboard-grid" style={{ display: 'grid', gridTemplateColumns: '1fr auto', gap: '1rem', alignItems: 'center' }}>
         <div>
           <h2 style={{ fontSize: '1.875rem', fontWeight: '700' }}>{t('fleet.title')}</h2>
           <p style={{ color: 'var(--text-secondary)' }}>{t('fleet.subtitle')}</p>
@@ -44,7 +44,7 @@ export default function FleetExplorer() {
       </div>
 
       {/* FILTER BAR */}
-      <div className="card" style={{ display: 'flex', flexWrap: 'wrap', gap: '1rem', alignItems: 'center' }}>
+      <div className="dashboard-grid card" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '1rem', alignItems: 'center' }}>
           <div style={{ flex: '1 1 250px', position: 'relative' }}>
               <Search size={18} color="var(--text-secondary)" style={{ position: 'absolute', top: '10px', left: '12px' }} />
               <input 

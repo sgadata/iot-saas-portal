@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Outlet, Link, useLocation } from 'react-router-dom';
-import { LayoutDashboard, Map, Activity, Settings, Bell, LogOut, Globe, PlusSquare } from 'lucide-react';
+import { LayoutDashboard, Map, Activity, Settings, Bell, LogOut, Globe, PlusSquare, Menu, X } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '../context/AuthContext';
 
@@ -9,6 +9,7 @@ export default function Layout() {
   const location = useLocation();
   const { logout, user } = useAuth();
   const { t, i18n } = useTranslation();
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   const navItems = [
     { key: 'dashboard', path: '/', icon: <LayoutDashboard size={20} />, roles: ['admin', 'tecnico'] },
@@ -20,13 +21,29 @@ export default function Layout() {
 
   return (
     <div className="app-container">
+      {/* Mobile Overlay */}
+      <div 
+        className={`sidebar-overlay ${isMobileMenuOpen ? 'visible' : ''}`} 
+        onClick={() => setIsMobileMenuOpen(false)}
+      ></div>
+
       {/* Sidebar */}
-      <aside className="sidebar">
-        <div style={{ marginBottom: '2rem', display: 'flex', alignItems: 'center', gap: '10px' }}>
-          <div style={{ width: '30px', height: '30px', borderRadius: '8px', background: 'var(--accent-primary)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-            <Activity color="white" size={18} />
+      <aside className={`sidebar ${isMobileMenuOpen ? 'open' : ''}`}>
+        <div style={{ marginBottom: '2rem', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+            <div style={{ width: '30px', height: '30px', borderRadius: '8px', background: 'var(--accent-primary)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              <Activity color="white" size={18} />
+            </div>
+            <h2 style={{ fontSize: '1.25rem', fontWeight: '700', color: 'white' }}>IoT SaaS</h2>
           </div>
-          <h2 style={{ fontSize: '1.25rem', fontWeight: '700', color: 'white' }}>IoT SaaS</h2>
+          <button 
+            onClick={() => setIsMobileMenuOpen(false)}
+            className="mobile-only"
+            style={{ background: 'transparent', border: 'none', color: 'var(--text-secondary)', cursor: 'pointer', display: 'none' }} 
+            id="close-menu-btn"
+          >
+            <X size={24} />
+          </button>
         </div>
 
         <nav style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
@@ -36,6 +53,7 @@ export default function Layout() {
               <Link 
                 key={item.key} 
                 to={item.path}
+                onClick={() => setIsMobileMenuOpen(false)}
                 style={{
                   display: 'flex',
                   alignItems: 'center',
@@ -64,7 +82,16 @@ export default function Layout() {
       <main className="main-content">
         {/* Top Header */}
         <header className="top-header">
-          <h1 style={{ fontSize: '1.25rem', fontWeight: '600', color: 'var(--text-primary)' }}>
+          <button 
+            onClick={() => setIsMobileMenuOpen(true)}
+            style={{ background: 'transparent', border: 'none', color: 'var(--text-primary)', cursor: 'pointer', marginRight: '1rem', display: 'none' }}
+            className="mobile-only"
+            id="mobile-menu-toggle"
+          >
+            <Menu size={24} />
+          </button>
+          
+          <h1 style={{ fontSize: '1.1rem', fontWeight: '600', color: 'var(--text-primary)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
             {t('app.adminPortal')}
           </h1>
           <div style={{ marginLeft: 'auto', display: 'flex', alignItems: 'center', gap: '20px' }}>

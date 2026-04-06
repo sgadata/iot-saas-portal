@@ -32,17 +32,9 @@ export default function Login() {
     };
 
     return (
-        <div style={{ display: 'flex', height: '100vh', width: '100vw', backgroundColor: 'var(--bg-primary)', overflow: 'hidden' }}>
+        <div className="login-container">
             {/* Left Side - Brand & Graphics */}
-            <div style={{ 
-                flex: 1, 
-                display: 'flex', 
-                flexDirection: 'column', 
-                justifyContent: 'center',
-                padding: '4rem',
-                position: 'relative',
-                background: 'linear-gradient(135deg, rgba(8,15,37,1) 0%, rgba(15,23,42,1) 100%)'
-            }}>
+            <div className="login-brand-section">
                 <div style={{ position: 'absolute', width: '600px', height: '600px', background: 'radial-gradient(circle, rgba(59,130,246,0.15) 0%, rgba(0,0,0,0) 70%)', top: '-10%', left: '-10%' }}></div>
                 
                 <div style={{ zIndex: 1, animation: 'fadeIn 1s ease-out' }}>
@@ -59,16 +51,7 @@ export default function Login() {
             </div>
 
             {/* Right Side - Login Form */}
-            <div style={{ 
-                flex: '0 0 500px', 
-                backgroundColor: 'var(--bg-secondary)', 
-                display: 'flex', 
-                flexDirection: 'column',
-                position: 'relative',
-                boxShadow: '-10px 0 30px rgba(0,0,0,0.5)',
-                borderLeft: '1px solid var(--border-color)',
-                zIndex: 2
-            }}>
+            <div className="login-form-section">
                 {/* i18n Selector flotante */}
                 <div style={{ padding: '2rem 2rem 0', display: 'flex', justifyContent: 'flex-end' }}>
                    <div style={{ display: 'flex', alignItems: 'center', gap: '5px', background: 'var(--bg-primary)', padding: '5px', borderRadius: 'var(--radius-md)' }}>

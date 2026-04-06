@@ -48,7 +48,7 @@ export default function DeviceTelemetry() {
       </div>
 
       {/* Metrics Row */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '1.5rem' }}>
+      <div className="dashboard-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '1.5rem' }}>
         <div className="card" style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
           <div style={{ padding: '0.8rem', backgroundColor: layout.color, borderRadius: '8px' }}>
             {layout.icon}
@@ -83,7 +83,7 @@ export default function DeviceTelemetry() {
       </div>
 
       {/* Charts Area */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'minmax(300px, 2fr) minmax(300px, 1fr)', gap: '1.5rem', flex: 1 }}>
+      <div className="dashboard-grid" style={{ display: 'grid', gridTemplateColumns: 'minmax(300px, 2fr) minmax(300px, 1fr)', gap: '1.5rem', flex: 1 }}>
         <div className="card" style={{ display: 'flex', flexDirection: 'column' }}>
           <h3 style={{ fontSize: '1.125rem', marginBottom: '1rem' }}>{t(`telemetry.${telemetry.type}_title`)}</h3>
           <div style={{ flex: 1, minHeight: '300px' }}>
