@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import { HashRouter, Routes, Route, Navigate } from 'react-router-dom';
 import Layout from './components/Layout';
 import AdminDashboard from './pages/AdminDashboard';
 import InteractiveMap from './components/InteractiveMap';
@@ -25,7 +25,7 @@ function ProtectedRoute({ children }) {
 function App() {
   return (
     <AuthProvider>
-      <BrowserRouter>
+      <HashRouter>
         <Routes>
           {/* Public Route */}
           <Route path="/login" element={<Login />} />
@@ -44,7 +44,7 @@ function App() {
             <Route path="provisioning" element={<Provisioning />} />
           </Route>
         </Routes>
-      </BrowserRouter>
+      </HashRouter>
     </AuthProvider>
   )
 }
