@@ -41,11 +41,16 @@ export default function Layout() {
       {/* Sidebar */}
       <aside className={`sidebar ${isMobileMenuOpen ? 'open' : ''}`}>
         <div style={{ marginBottom: '2rem', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-            <div style={{ width: '30px', height: '30px', borderRadius: '8px', background: 'var(--accent-primary)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-              <Activity color="white" size={18} />
+          <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+            <img 
+              src="sga_data_logo_premium_1775557656079.png" 
+              alt="SGA Data Logo" 
+              style={{ height: '40px', width: 'auto', objectFit: 'contain' }} 
+            />
+            <div style={{ display: 'flex', flexDirection: 'column' }}>
+              <h2 style={{ fontSize: '1.1rem', fontWeight: '800', color: 'white', margin: 0, letterSpacing: '0.02em' }}>SGA DATA</h2>
+              <span style={{ fontSize: '0.65rem', color: 'var(--accent-primary)', fontWeight: '700', textTransform: 'uppercase', marginTop: '-4px' }}>IoT Commander</span>
             </div>
-            <h2 style={{ fontSize: '1.25rem', fontWeight: '700', color: 'white' }}>IoT SaaS</h2>
           </div>
           <button 
             onClick={() => setIsMobileMenuOpen(false)}
