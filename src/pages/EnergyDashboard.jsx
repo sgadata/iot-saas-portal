@@ -9,6 +9,8 @@ export default function EnergyDashboard() {
   const [stats, setStats] = useState(null);
   const [loading, setLoading] = useState(true);
 
+  const [isExporting, setIsExporting] = useState(false);
+
   useEffect(() => {
     async function loadStats() {
       const data = await apiClient.getEnergyStats();
@@ -17,6 +19,14 @@ export default function EnergyDashboard() {
     }
     loadStats();
   }, []);
+
+  const handleExport = () => {
+    setIsExporting(true);
+    setTimeout(() => {
+      setIsExporting(false);
+      alert('SGA Energy Audit Generated Successfully! (Simulation)');
+    }, 2000);
+  };
 
   if (loading) return <div style={{ color: 'var(--text-secondary)', padding: '2rem' }}>{t('admin.loading')}</div>;
 
@@ -136,8 +146,12 @@ export default function EnergyDashboard() {
             ))}
           </div>
 
-          <button style={{ marginTop: 'auto', background: 'rgba(59, 130, 246, 0.1)', color: 'var(--accent-primary)', border: 'none', padding: '12px', borderRadius: '8px', fontWeight: '700', cursor: 'pointer', transition: 'all 0.2s' }}>
-            Download Full Energy Audit →
+          <button 
+            disabled={isExporting}
+            onClick={handleExport}
+            style={{ marginTop: 'auto', background: 'rgba(59, 130, 246, 0.1)', color: 'var(--accent-primary)', border: 'none', padding: '12px', borderRadius: '8px', fontWeight: '700', cursor: 'pointer', transition: 'all 0.2s', opacity: isExporting ? 0.5 : 1 }}
+          >
+            {isExporting ? 'Generating SGA Audit...' : 'Download Full Energy Audit →'}
           </button>
         </div>
       </div>
