@@ -78,7 +78,19 @@ const resources = {
         "btn_open": "Open Valve",
         "btn_close": "Close Valve",
         "btn_timer": "Open (30m Timer)",
-        "sending": "Sending command..."
+        "btn_schedule": "Schedule Irrigation",
+        "sending": "Sending command...",
+        
+        "automation_title": "Automation & Scheduling",
+        "start_time": "Start Time",
+        "end_time": "End Time",
+        "active": "Active",
+        "save_btn": "Save Schedule",
+        
+        "config_title": "Hardware Configuration",
+        "uplink_frequency": "Uplink Frequency",
+        "reset_btn": "Reset Counter",
+        "calibrate_btn": "Calibrate Node"
       },
       "types": {
         "water": "Water Meter",
@@ -199,7 +211,19 @@ const resources = {
         "btn_open": "Abrir Válvula",
         "btn_close": "Cerrar Válvula",
         "btn_timer": "Abrir (Timer 30m)",
-        "sending": "Enviando comando..."
+        "btn_schedule": "Programar Riego",
+        "sending": "Enviando comando...",
+
+        "automation_title": "Automatización y Horarios",
+        "start_time": "Hora Inicio",
+        "end_time": "Hora Fin",
+        "active": "Activo",
+        "save_btn": "Guardar Agenda",
+
+        "config_title": "Configuración de Hardware",
+        "uplink_frequency": "Frecuencia de Envío",
+        "reset_btn": "Resetear Contador",
+        "calibrate_btn": "Calibrar Nodo"
       },
       "types": {
         "water": "Medidor de Agua",

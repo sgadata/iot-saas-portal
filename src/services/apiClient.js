@@ -20,11 +20,11 @@ const DATA_CACHE = {
   ],
   fleet: [
     { devEui: 'A84041000181A001', name: 'Contador General', type: 'water', status: 'green', country: 'España', community: 'Comunidad de Madrid', estate: 'Estate Alpha', battery: 85, lastSeen: '10m ago' },
-    { devEui: 'A84041000181A002', name: 'Analizador Fuga LEL', type: 'gas', status: 'red', country: 'España', community: 'Comunidad de Madrid', estate: 'Building Omega', battery: 12, lastSeen: '2m ago' },
-    { devEui: '2B7E151628AED2A6', name: 'Sala Frío Temp', type: 'temp', status: 'orange', country: 'España', community: 'Andalucía', estate: 'Plaza Center', battery: 40, lastSeen: '1h ago' },
-    { devEui: 'A84041000181A004', name: 'Granja Luz LuxSensor', type: 'light', status: 'green', country: 'España', community: 'Andalucía', estate: 'Greenhouse Sigma', battery: 95, lastSeen: '5m ago' },
-    { devEui: 'F8C041000181A005', name: 'Bomba Norte Agua', type: 'water', status: 'green', country: 'España', community: 'Cataluña', estate: 'Port Complex', battery: 60, lastSeen: '30m ago' },
-    { devEui: 'D8C041000181V006', name: 'Válvula Riego Sector 1', type: 'valve', status: 'green', valveStatus: 'closed', country: 'España', community: 'Extremadura', estate: 'Finca Olivar', battery: 88, lastSeen: '1m ago', position: [38.9168, -6.3438] },
+    { devEui: 'A84041000181A002', name: 'Analizador Fuga LEL', type: 'gas', status: 'red', country: 'España', community: 'Comunidad de Madrid', estate: 'Building Omega', battery: 12, lastSeen: '2m ago', config: { uplinkInterval: '10m', alertThreshold: 20 } },
+    { devEui: '2B7E151628AED2A6', name: 'Sala Frío Temp', type: 'temp', status: 'orange', country: 'España', community: 'Andalucía', estate: 'Plaza Center', battery: 40, lastSeen: '1h ago', config: { uplinkInterval: '1h' } },
+    { devEui: 'A84041000181A004', name: 'Granja Luz LuxSensor', type: 'light', status: 'green', country: 'España', community: 'Andalucía', estate: 'Greenhouse Sigma', battery: 95, lastSeen: '5m ago', config: { uplinkInterval: '30m' } },
+    { devEui: 'F8C041000181A005', name: 'Bomba Norte Agua', type: 'water', status: 'green', country: 'España', community: 'Cataluña', estate: 'Port Complex', battery: 60, lastSeen: '30m ago', config: { uplinkInterval: '1h' } },
+    { devEui: 'D8C041000181V006', name: 'Válvula Riego Sector 1', type: 'valve', status: 'green', valveStatus: 'closed', schedule: { start: '08:00', end: '09:00', active: false }, country: 'España', community: 'Extremadura', estate: 'Finca Olivar', battery: 88, lastSeen: '1m ago', position: [38.9168, -6.3438] },
   ],
   telemetryProfiles: {
     "root": [
@@ -105,6 +105,24 @@ export const apiClient = {
       }
       
       return { success: true, message: `Command ${action} sent successfully` };
+    }
+  },
+
+  saveSchedule: async (devEui, schedule) => {
+    if (USE_MOCK_API) {
+      await delay(1000);
+      const device = DATA_CACHE.fleet.find(d => d.devEui === devEui);
+      if (device) device.schedule = schedule;
+      return { success: true };
+    }
+  },
+
+  updateConfig: async (devEui, config) => {
+    if (USE_MOCK_API) {
+      await delay(1000);
+      const device = DATA_CACHE.fleet.find(d => d.devEui === devEui);
+      if (device) device.config = { ...device.config, ...config };
+      return { success: true };
     }
   }
 };

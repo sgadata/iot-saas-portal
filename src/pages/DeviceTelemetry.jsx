@@ -11,6 +11,8 @@ export default function DeviceTelemetry() {
   const { t } = useTranslation();
   const [telemetry, setTelemetry] = useState({ type: 'water', data: [] });
   const [loading, setLoading] = useState(true);
+  const [schedule, setSchedule] = useState({ start: '08:00', end: '09:00', active: false });
+  const [config, setConfig] = useState({ uplinkInterval: '1h' });
 
   useEffect(() => {
     async function loadTelemetry() {
@@ -22,6 +24,8 @@ export default function DeviceTelemetry() {
        const device = fleet.find(d => d.devEui === deviceId);
        if (device) {
            setTelemetry(prev => ({ ...prev, name: device.name, valveStatus: device.valveStatus }));
+           if (device.schedule) setSchedule(device.schedule);
+           if (device.config) setConfig(device.config);
        }
        
        setLoading(false);
@@ -36,6 +40,21 @@ export default function DeviceTelemetry() {
         setTelemetry(prev => ({ ...prev, valveStatus: action === 'OPEN' ? 'open' : 'closed' }));
     }
     setLoading(false);
+  };
+
+  const handleSaveSchedule = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    await apiClient.saveSchedule(deviceId, schedule);
+    setLoading(false);
+    alert(t('telemetry.success_save') || 'Schedule saved');
+  };
+
+  const handleUpdateConfig = async (newInterval) => {
+      setLoading(true);
+      await apiClient.updateConfig(deviceId, { uplinkInterval: newInterval });
+      setConfig(prev => ({ ...prev, uplinkInterval: newInterval }));
+      setLoading(false);
   };
 
   const getDynamicLayout = () => {
@@ -181,6 +200,95 @@ export default function DeviceTelemetry() {
               </LineChart>
             </ResponsiveContainer>
           </div>
+        </div>
+      </div>
+
+      {/* Automation & Config Row */}
+      <div className="dashboard-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '1.5rem' }}>
+        
+        {/* SCHEDULER (Only for Valves) */}
+        {telemetry.type === 'valve' && (
+          <div className="card">
+             <h3 style={{ fontSize: '1.125rem', marginBottom: '1.25rem', borderBottom: '1px solid var(--border-color)', paddingBottom: '0.75rem' }}>
+               {t('telemetry.automation_title')}
+             </h3>
+             <form onSubmit={handleSaveSchedule} style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
+                  <div>
+                    <label style={{ display: 'block', fontSize: '0.75rem', color: 'var(--text-secondary)', marginBottom: '4px' }}>{t('telemetry.start_time')}</label>
+                    <input 
+                      type="time" 
+                      value={schedule.start} 
+                      onChange={e => setSchedule({...schedule, start: e.target.value})}
+                      style={{ width: '100%', padding: '8px', background: 'var(--bg-primary)', border: '1px solid var(--border-color)', borderRadius: '6px', color: 'white' }}
+                    />
+                  </div>
+                  <div>
+                    <label style={{ display: 'block', fontSize: '0.75rem', color: 'var(--text-secondary)', marginBottom: '4px' }}>{t('telemetry.end_time')}</label>
+                    <input 
+                      type="time" 
+                      value={schedule.end} 
+                      onChange={e => setSchedule({...schedule, end: e.target.value})}
+                      style={{ width: '100%', padding: '8px', background: 'var(--bg-primary)', border: '1px solid var(--border-color)', borderRadius: '6px', color: 'white' }}
+                    />
+                  </div>
+                </div>
+                <label style={{ display: 'flex', alignItems: 'center', gap: '10px', cursor: 'pointer', fontSize: '0.875rem' }}>
+                  <input 
+                    type="checkbox" 
+                    checked={schedule.active} 
+                    onChange={e => setSchedule({...schedule, active: e.target.checked})}
+                  />
+                  {t('telemetry.active')}
+                </label>
+                <button type="submit" disabled={loading} style={{ background: 'var(--accent-primary)', color: 'white', border: 'none', padding: '10px', borderRadius: 'var(--radius-md)', fontWeight: '600', cursor: 'pointer', marginTop: '0.5rem' }}>
+                  {t('telemetry.save_btn')}
+                </button>
+             </form>
+          </div>
+        )}
+
+        {/* GENERAL CONFIG (For all sensors) */}
+        <div className="card">
+           <h3 style={{ fontSize: '1.125rem', marginBottom: '1.25rem', borderBottom: '1px solid var(--border-color)', paddingBottom: '0.75rem' }}>
+             {t('telemetry.config_title')}
+           </h3>
+           <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
+              <div>
+                <p style={{ fontSize: '0.875rem', color: 'var(--text-secondary)', marginBottom: '8px' }}>{t('telemetry.uplink_frequency')}</p>
+                <div style={{ display: 'flex', gap: '8px' }}>
+                  {['5m', '15m', '1h', '6h'].map(interval => (
+                    <button 
+                      key={interval}
+                      onClick={() => handleUpdateConfig(interval)}
+                      disabled={loading}
+                      style={{ 
+                        flex: 1, 
+                        padding: '6px', 
+                        fontSize: '0.75rem',
+                        background: config.uplinkInterval === interval ? 'rgba(59, 130, 246, 0.2)' : 'var(--bg-primary)',
+                        border: '1px solid',
+                        borderColor: config.uplinkInterval === interval ? 'var(--accent-primary)' : 'var(--border-color)',
+                        color: config.uplinkInterval === interval ? 'var(--accent-primary)' : 'var(--text-secondary)',
+                        borderRadius: '4px',
+                        cursor: 'pointer'
+                      }}
+                    >
+                      {interval}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              <div style={{ display: 'flex', gap: '1rem' }}>
+                <button disabled={loading} style={{ flex: 1, padding: '10px', background: 'transparent', border: '1px solid var(--border-color)', color: 'var(--text-primary)', borderRadius: 'var(--radius-md)', fontSize: '0.75rem', cursor: 'pointer' }}>
+                  🔄 {t('telemetry.reset_btn')}
+                </button>
+                <button disabled={loading} style={{ flex: 1, padding: '10px', background: 'transparent', border: '1px solid var(--border-color)', color: 'var(--text-primary)', borderRadius: 'var(--radius-md)', fontSize: '0.75rem', cursor: 'pointer' }}>
+                  🛠️ {t('telemetry.calibrate_btn')}
+                </button>
+              </div>
+           </div>
         </div>
       </div>
     </div>
