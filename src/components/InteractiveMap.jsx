@@ -10,20 +10,21 @@ import L from 'leaflet';
 import icon from 'leaflet/dist/images/marker-icon.png';
 import iconShadow from 'leaflet/dist/images/marker-shadow.png';
 
-let DefaultIcon = L.icon({
-    iconUrl: icon,
+const createIcon = (color) => L.icon({
+    iconUrl: `https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-${color}.png`,
     shadowUrl: iconShadow,
     iconSize: [25, 41],
     iconAnchor: [12, 41]
 });
 
-let ValveIcon = L.icon({
-    iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-blue.png',
-    shadowUrl: iconShadow,
-    iconSize: [25, 41],
-    iconAnchor: [12, 41]
-});
+const StatusIcons = {
+    green: createIcon('green'),
+    orange: createIcon('orange'),
+    red: createIcon('red'),
+    blue: createIcon('blue')
+};
 
+const DefaultIcon = StatusIcons.blue;
 L.Marker.prototype.options.icon = DefaultIcon;
 
 export default function InteractiveMap() {
@@ -91,7 +92,7 @@ export default function InteractiveMap() {
             <Marker 
               key={`est-${estate.id}`} 
               position={estate.position}
-              icon={estate.type === 'valve' ? ValveIcon : DefaultIcon}
+              icon={StatusIcons[estate.status] || StatusIcons.blue}
             >
               <Popup>
                 <div style={{ padding: '4px', minWidth: '150px' }}>
@@ -135,7 +136,7 @@ export default function InteractiveMap() {
             <Marker 
               key={`dev-${device.devEui}`} 
               position={device.position}
-              icon={device.type === 'valve' ? ValveIcon : DefaultIcon}
+              icon={device.type === 'valve' ? StatusIcons.blue : (StatusIcons[device.status] || StatusIcons.blue)}
             >
               <Popup>
                 <div style={{ padding: '4px', minWidth: '200px' }}>
