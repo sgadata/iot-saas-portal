@@ -124,5 +124,13 @@ export const apiClient = {
       if (device) device.config = { ...device.config, ...config };
       return { success: true };
     }
+  },
+
+  triggerAction: async (devEui, actionType) => {
+    if (USE_MOCK_API) {
+      console.log(`[QUICK ACTION] ${actionType} on device ${devEui}`);
+      await delay(1200); // Latencia simulada
+      return { success: true, message: `Action ${actionType} executed correctly` };
+    }
   }
 };

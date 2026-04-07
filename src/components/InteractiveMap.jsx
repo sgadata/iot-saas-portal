@@ -58,6 +58,12 @@ export default function InteractiveMap() {
     setCommanding(null);
   };
 
+  const handleAction = async (devEui, actionType) => {
+    setCommanding(devEui);
+    await apiClient.triggerAction(devEui, actionType);
+    setCommanding(null);
+  };
+
   return (
     <div className="animate-fade-in" style={{ display: 'flex', flexDirection: 'column', gap: '1rem', height: '100%' }}>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
@@ -172,6 +178,58 @@ export default function InteractiveMap() {
                       >
                         {t('telemetry.btn_timer')}
                       </button>
+                    </div>
+                  )}
+
+                  {/* Quick Actions for Non-Valve Sensors */}
+                  {device.type !== 'valve' && (
+                    <div style={{ background: 'rgba(255,255,255,0.03)', padding: '10px', borderRadius: '8px', display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                      <p style={{ fontSize: '0.7rem', fontWeight: '600', textTransform: 'uppercase', color: 'var(--text-secondary)', marginBottom: '2px' }}>
+                        {t('dashboard.quickActions')}
+                      </p>
+                      
+                      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px' }}>
+                        {device.type === 'water' && (
+                          <>
+                            <button onClick={(e) => { e.stopPropagation(); handleAction(device.devEui, 'RESET'); }} style={{ background: 'var(--bg-primary)', color: 'var(--text-primary)', border: '1px solid var(--border-color)', padding: '6px', borderRadius: '4px', cursor: 'pointer', fontSize: '0.65rem' }}>
+                              🔄 {t('telemetry.reset_btn')}
+                            </button>
+                            <button onClick={(e) => { e.stopPropagation(); handleAction(device.devEui, 'LEAK'); }} style={{ background: 'var(--bg-primary)', color: 'var(--text-primary)', border: '1px solid var(--border-color)', padding: '6px', borderRadius: '4px', cursor: 'pointer', fontSize: '0.65rem' }}>
+                              🔍 {t('telemetry.leak_test')}
+                            </button>
+                          </>
+                        )}
+                        {device.type === 'gas' && (
+                          <>
+                            <button onClick={(e) => { e.stopPropagation(); handleAction(device.devEui, 'ALARM'); }} style={{ background: 'rgba(239, 68, 68, 0.15)', color: '#ef4444', border: '1px solid rgba(239, 68, 68, 0.3)', padding: '6px', borderRadius: '4px', cursor: 'pointer', fontSize: '0.65rem' }}>
+                              🔔 {t('telemetry.test_alarm')}
+                            </button>
+                            <button onClick={(e) => { e.stopPropagation(); navigate(`/telemetry/${device.devEui}`); }} style={{ background: 'var(--bg-primary)', color: 'var(--text-primary)', border: '1px solid var(--border-color)', padding: '6px', borderRadius: '4px', cursor: 'pointer', fontSize: '0.65rem' }}>
+                              ⚙️ Config
+                            </button>
+                          </>
+                        )}
+                        {device.type === 'temp' && (
+                          <>
+                            <button onClick={(e) => { e.stopPropagation(); handleAction(device.devEui, 'SYNC'); }} style={{ background: 'var(--bg-primary)', color: 'var(--text-primary)', border: '1px solid var(--border-color)', padding: '6px', borderRadius: '4px', cursor: 'pointer', fontSize: '0.65rem' }}>
+                              📡 {t('telemetry.sync_btn')}
+                            </button>
+                            <button onClick={(e) => { e.stopPropagation(); navigate(`/telemetry/${device.devEui}`); }} style={{ background: 'var(--bg-primary)', color: 'var(--text-primary)', border: '1px solid var(--border-color)', padding: '6px', borderRadius: '4px', cursor: 'pointer', fontSize: '0.65rem' }}>
+                              ⚙️ Thresholds
+                            </button>
+                          </>
+                        )}
+                        {device.type === 'light' && (
+                          <>
+                            <button onClick={(e) => { e.stopPropagation(); handleAction(device.devEui, 'CALIBRATE'); }} style={{ background: 'var(--bg-primary)', color: 'var(--text-primary)', border: '1px solid var(--border-color)', padding: '6px', borderRadius: '4px', cursor: 'pointer', fontSize: '0.65rem' }}>
+                              ⚖️ {t('telemetry.calibrate_btn')}
+                            </button>
+                            <button onClick={(e) => { e.stopPropagation(); handleAction(device.devEui, 'NIGHT'); }} style={{ background: 'var(--bg-primary)', color: 'var(--text-primary)', border: '1px solid var(--border-color)', padding: '6px', borderRadius: '4px', cursor: 'pointer', fontSize: '0.65rem' }}>
+                              🌙 {t('telemetry.night_mode')}
+                            </button>
+                          </>
+                        )}
+                      </div>
                     </div>
                   )}
 

@@ -90,7 +90,11 @@ const resources = {
         "config_title": "Hardware Configuration",
         "uplink_frequency": "Uplink Frequency",
         "reset_btn": "Reset Counter",
-        "calibrate_btn": "Calibrate Node"
+        "calibrate_btn": "Calibrate Node",
+        "sync_btn": "Sync Now",
+        "leak_test": "Leak Test",
+        "test_alarm": "Test Alarm",
+        "night_mode": "Night Mode"
       },
       "types": {
         "water": "Water Meter",
@@ -223,7 +227,11 @@ const resources = {
         "config_title": "Configuración de Hardware",
         "uplink_frequency": "Frecuencia de Envío",
         "reset_btn": "Resetear Contador",
-        "calibrate_btn": "Calibrar Nodo"
+        "calibrate_btn": "Calibrar Nodo",
+        "sync_btn": "Sincronizar",
+        "leak_test": "Test Fuga",
+        "test_alarm": "Test Alarma",
+        "night_mode": "Modo Noche"
       },
       "types": {
         "water": "Medidor de Agua",
