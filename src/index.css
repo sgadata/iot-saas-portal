@@ -95,6 +95,15 @@ body {
   box-shadow: var(--shadow-glow);
 }
 
+.kpi-hover-card:hover {
+  border-color: var(--accent-primary) !important;
+  background-color: rgba(59, 130, 246, 0.05) !important;
+}
+
+.kpi-hover-card:hover .card-title {
+  color: var(--accent-primary);
+}
+
 .card-title {
   font-size: 0.875rem;
   color: var(--text-secondary);
