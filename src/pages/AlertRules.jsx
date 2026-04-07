@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { ShieldCheck, Plus, Trash2, Bell, Zap, Thermometer, Battery, X, Mail, MessageSquare, Play } from 'lucide-react';
+import { ShieldCheck, Plus, Trash2, Bell, Zap, Thermometer, Battery, X, Mail, MessageSquare, Play, Droplets, Flame, Sun, Settings } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { apiClient } from '../services/apiClient';
 
@@ -29,6 +29,17 @@ export default function AlertRules() {
 
   const getSeverityColor = (sev) => {
     return sev === 'critical' ? 'var(--status-red)' : 'var(--status-orange)';
+  };
+
+  const getSensorIcon = (type) => {
+    switch(type) {
+      case 'water': return <Droplets size={20} color="var(--accent-primary)" />;
+      case 'gas': return <Flame size={20} color="var(--status-red)" />;
+      case 'temp': return <Thermometer size={20} color="var(--status-orange)" />;
+      case 'light': return <Sun size={20} color="#fbbf24" />;
+      case 'valve': return <Settings size={20} color="var(--status-green)" />;
+      default: return <Zap size={20} color="var(--text-secondary)" />;
+    }
   };
 
   const handleCreateRule = (e) => {
@@ -73,7 +84,7 @@ export default function AlertRules() {
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
                 <div style={{ padding: '10px', background: 'rgba(255,255,255,0.03)', borderRadius: '12px', border: '1px solid var(--border-color)' }}>
-                  {rule.sensorType === 'temp' ? <Thermometer size={20} color="var(--accent-primary)" /> : <Zap size={20} color="var(--status-orange)" />}
+                  {getSensorIcon(rule.sensorType)}
                 </div>
                 <div>
                   <h4 style={{ fontSize: '1.1rem', fontWeight: '600', margin: 0 }}>{rule.name}</h4>
@@ -133,7 +144,7 @@ export default function AlertRules() {
                   </div>
 
                   <form onSubmit={handleCreateRule} style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
-                      <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr', gap: '1.25rem' }}>
+                      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.25rem' }}>
                         <div>
                             <label style={{ display: 'block', fontSize: '0.75rem', fontWeight: '700', marginBottom: '8px', textTransform: 'uppercase', color: 'var(--text-secondary)' }}>{t('admin.ruleName')}</label>
                             <input required type="text" value={newRule.name} onChange={e => setNewRule({...newRule, name: e.target.value})} style={{ width: '100%', padding: '12px', background: 'var(--bg-primary)', border: '1px solid var(--border-color)', borderRadius: '8px', color: 'white', outline: 'none' }} placeholder="Ex: High Temp Alert" />
@@ -141,19 +152,29 @@ export default function AlertRules() {
                         <div>
                             <label style={{ display: 'block', fontSize: '0.75rem', fontWeight: '700', marginBottom: '8px', textTransform: 'uppercase', color: 'var(--text-secondary)' }}>{t('admin.severity')}</label>
                             <select value={newRule.severity} onChange={e => setNewRule({...newRule, severity: e.target.value})} style={{ width: '100%', padding: '12px', background: 'var(--bg-primary)', border: '1px solid var(--border-color)', borderRadius: '8px', color: 'white', outline: 'none' }}>
-                                <option value="warning">Warning</option>
-                                <option value="critical">Critical</option>
+                                <option value="warning">{t('admin.sevWarning')}</option>
+                                <option value="critical">{t('admin.sevCritical')}</option>
                             </select>
                         </div>
                       </div>
 
-                      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.25rem' }}>
+                      <div style={{ display: 'grid', gridTemplateColumns: '1.5fr 1fr 1fr', gap: '1.25rem' }}>
+                        <div>
+                            <label style={{ display: 'block', fontSize: '0.75rem', fontWeight: '700', marginBottom: '8px', textTransform: 'uppercase', color: 'var(--text-secondary)' }}>{t('provisioning.type')}</label>
+                            <select value={newRule.sensorType} onChange={e => setNewRule({...newRule, sensorType: e.target.value})} style={{ width: '100%', padding: '12px', background: 'var(--bg-primary)', border: '1px solid var(--border-color)', borderRadius: '8px', color: 'white' }}>
+                                <option value="water">{t('types.water')}</option>
+                                <option value="gas">{t('types.gas')}</option>
+                                <option value="temp">{t('types.temp')}</option>
+                                <option value="light">{t('types.light')}</option>
+                                <option value="valve">{t('types.valve')}</option>
+                            </select>
+                        </div>
                         <div>
                             <label style={{ display: 'block', fontSize: '0.75rem', fontWeight: '700', marginBottom: '8px', textTransform: 'uppercase', color: 'var(--text-secondary)' }}>{t('admin.condition')}</label>
                             <select value={newRule.condition} onChange={e => setNewRule({...newRule, condition: e.target.value})} style={{ width: '100%', padding: '12px', background: 'var(--bg-primary)', border: '1px solid var(--border-color)', borderRadius: '8px', color: 'white' }}>
-                                <option value=">">Grater than ({'>'})</option>
-                                <option value="<">Less than ({'<'})</option>
-                                <option value="=">Equals (=)</option>
+                                <option value=">">{t('admin.condGreater')}</option>
+                                <option value="<">{t('admin.condLess')}</option>
+                                <option value="=">{t('admin.condEquals')}</option>
                             </select>
                         </div>
                         <div>
@@ -190,9 +211,21 @@ export default function AlertRules() {
                         </select>
                       </div>
 
-                      <button type="submit" style={{ background: 'var(--accent-primary)', color: 'white', padding: '14px', borderRadius: 'var(--radius-md)', border: 'none', fontWeight: '800', cursor: 'pointer', marginTop: '0.5rem', fontSize: '1rem' }}>
-                          {t('admin.createRuleBtn')}
-                      </button>
+                      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem', marginTop: '0.5rem' }}>
+                        <button 
+                          type="button" 
+                          onClick={() => setShowModal(false)}
+                          style={{ background: 'rgba(255,255,255,0.05)', color: 'white', padding: '14px', borderRadius: 'var(--radius-md)', border: '1px solid var(--border-color)', fontWeight: '600', cursor: 'pointer', fontSize: '1rem' }}
+                        >
+                          {t('common.clearAll')}
+                        </button>
+                        <button 
+                          type="submit" 
+                          style={{ background: 'var(--accent-primary)', color: 'white', padding: '14px', borderRadius: 'var(--radius-md)', border: 'none', fontWeight: '800', cursor: 'pointer', fontSize: '1rem' }}
+                        >
+                            {t('admin.createRuleBtn')}
+                        </button>
+                      </div>
                   </form>
               </div>
           </div>
