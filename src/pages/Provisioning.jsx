@@ -23,7 +23,21 @@ export default function Provisioning() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if(form.devEui.length < 16) return;
+    
+    // Validaciones de Seguridad (Regex estricto)
+    const euiRegex = /^[0-9A-F]{16}$/;
+    const keyRegex = /^[0-9A-F]{32}$/;
+
+    if (!euiRegex.test(form.devEui)) {
+      alert("Invalid DevEUI: Must be 16 hexadecimal characters.");
+      return;
+    }
+
+    if (form.appKey && !keyRegex.test(form.appKey)) {
+      alert("Invalid AppKey: Must be 32 hexadecimal characters.");
+      return;
+    }
+
     setStatus('loading');
     const response = await apiClient.registerLoRaDevice(form.devEui, form.appKey, form.type, form.estateId);
     if(response.success) {
