@@ -19,7 +19,8 @@ const resources = {
         "provisioning": "Add Sensor",
         "administration": "Administration",
         "auditLogs": "Audit Logs",
-        "alertRules": "Alert Rules"
+        "alertRules": "Alert Rules",
+        "energy": "Energy Analytics"
       },
       "login": {
         "signIn": "Sign In",
@@ -226,7 +227,8 @@ const resources = {
         "provisioning": "Añadir Sensor",
         "administration": "Administración",
         "auditLogs": "Logs de Auditoría",
-        "alertRules": "Reglas de Alerta"
+        "alertRules": "Reglas de Alerta",
+        "energy": "Análisis de Energía"
       },
       "login": {
         "signIn": "Iniciar Sesión",
