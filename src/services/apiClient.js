@@ -27,6 +27,7 @@ const DATA_CACHE = {
     { id: 14, name: 'Edificio Sky', position: [40.3700, -3.7500], status: 'green', type: 'light', statusDetail: 'Operativo' },
   ],
   fleet: [],
+  gateways: [], // Nueva infraestructura core
   rules: [
     { id: 1, name: 'High Temperature Alert', sensorType: 'temp', condition: '>', threshold: 35, severity: 'critical', active: true },
     { id: 2, name: 'Low Battery Warning', sensorType: 'all', condition: '<', threshold: 15, severity: 'warning', active: true },
@@ -80,6 +81,29 @@ for (let i = 0; i < 342; i++) {
     position: i < 14 ? estate.position : null
   });
 }
+
+// --- GENERADOR DE GATEWAYS (Infraestructura 5 nodos) ---
+const gatewayLocations = [
+  { name: 'GW-Murcia-Centro', pos: [38.0, -1.1] },
+  { name: 'GW-Albacete-Norte', pos: [39.0, -1.8] },
+  { name: 'GW-Castilla-SGA', pos: [39.8, -3.5] },
+  { name: 'GW-Valencia-Agro', pos: [39.4, -0.4] },
+  { name: 'GW-Toledo-Industrial', pos: [39.9, -4.0] }
+];
+
+gatewayLocations.forEach((gw, i) => {
+  DATA_CACHE.gateways.push({
+    devEui: `F00000000000${(100 + i).toString()}`,
+    name: gw.name,
+    type: 'gateway',
+    status: i === 4 ? 'orange' : 'green', // Uno con aviso
+    position: gw.pos,
+    vendor: 'RAKWireless 7249 Turbo',
+    uptime: '99.9%',
+    traffic: `${Math.floor(Math.random() * 5000)} packets/h`,
+    connectedNodes: Math.floor(Math.random() * 100) + 20
+  });
+});
 
 export const apiClient = {
   getTopologies: async () => {
@@ -138,6 +162,13 @@ export const apiClient = {
           await delay(600);
           return DATA_CACHE.fleet;
       }
+  },
+
+  getGateways: async () => {
+    if (USE_MOCK_API) {
+      await delay(600);
+      return DATA_CACHE.gateways;
+    }
   },
 
   sendCommand: async (devEui, action, minutes = null) => {

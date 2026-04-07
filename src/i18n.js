@@ -109,7 +109,8 @@ const resources = {
         "gas": "Gas Analyzer",
         "temp": "Thermometer",
         "light": "Light Sensor",
-        "valve": "Irrigation Valve"
+        "valve": "Irrigation Valve",
+        "gateway": "LoRaWAN Gateway"
       },
       "settings": {
         "title": "Corporate Settings",
@@ -213,7 +214,10 @@ const resources = {
       "common": {
         "pending": "Pending",
         "clearAll": "Clear All",
-        "noAlerts": "No alerts detected"
+        "noAlerts": "No alerts detected",
+        "uptime": "Uptime",
+        "traffic": "Net Traffic",
+        "vendor": "Hardware Vendor"
       }
     }
   },
@@ -322,7 +326,8 @@ const resources = {
         "gas": "Analizador de Gas",
         "temp": "Termómetro",
         "light": "Sensor de Luz",
-        "valve": "Válvula de Riego"
+        "valve": "Válvula de Riego",
+        "gateway": "Antena / Gateway"
       },
       "settings": {
         "title": "Ajustes Corporativos",
@@ -426,7 +431,10 @@ const resources = {
       "common": {
         "pending": "Pendiente",
         "clearAll": "Limpiar todo",
-        "noAlerts": "No se detectan alertas"
+        "noAlerts": "No se detectan alertas",
+        "uptime": "Disponibilidad (Uptime)",
+        "traffic": "Tráfico de Red",
+        "vendor": "Fabricante"
       }
     }
   }

@@ -42,6 +42,14 @@ export const DEVICE_SCHEMAS = {
     popupType: 'valve',
     actions: [] // Las válvulas suelen tener su propio set de botones fijos (Open/Close)
   },
+  gateway: {
+    iconColor: 'blue', // Usaremos un icono personalizado en el mapa luego
+    popupType: 'gateway',
+    actions: [
+      { id: 'REBOOT', labelKey: 'admin.actionReset', icon: '🔋' },
+      { id: 'LOGS', labelKey: 'admin.auditLogs', icon: '📋' }
+    ]
+  },
   // Ejemplo de extensibilidad rápida:
   default: {
     iconColor: 'blue',

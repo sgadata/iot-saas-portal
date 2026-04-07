@@ -6,6 +6,7 @@ import { apiClient } from '../services/apiClient';
 import { DEVICE_SCHEMAS } from '../config/deviceSchemas';
 import ValvePopup from './map/popups/ValvePopup';
 import SensorPopup from './map/popups/SensorPopup';
+import GatewayPopup from './map/popups/GatewayPopup';
 import 'leaflet/dist/leaflet.css';
 
 // Registro de Iconos Leaflet
@@ -23,7 +24,8 @@ const StatusIcons = {
     green: createIcon('green'),
     orange: createIcon('orange'),
     red: createIcon('red'),
-    blue: createIcon('blue')
+    blue: createIcon('blue'),
+    violet: createIcon('violet') // Nuevo para Infraestructura (Gateway)
 };
 
 export default function InteractiveMap() {
@@ -32,6 +34,7 @@ export default function InteractiveMap() {
   const { t } = useTranslation();
   const [estates, setEstates] = useState([]);
   const [fleet, setFleet] = useState([]);
+  const [gateways, setGateways] = useState([]);
   const [loading, setLoading] = useState(true);
   const [commanding, setCommanding] = useState(null);
   const [statusFilter, setStatusFilter] = useState(location.state?.initialStatus || 'all');
@@ -39,12 +42,14 @@ export default function InteractiveMap() {
 
   useEffect(() => {
     async function loadData() {
-      const [estatesData, fleetData] = await Promise.all([
+      const [estatesData, fleetData, gatewayData] = await Promise.all([
         apiClient.getTopologies(),
-        apiClient.getDeviceFleet()
+        apiClient.getDeviceFleet(),
+        apiClient.getGateways()
       ]);
       setEstates(estatesData);
       setFleet(fleetData.filter(d => d.position));
+      setGateways(gatewayData || []);
       setLoading(false);
     }
     loadData();
@@ -76,6 +81,10 @@ export default function InteractiveMap() {
       return <ValvePopup device={device} onCommand={handleCommand} commanding={commanding} />;
     }
     
+    if (schema.popupType === 'gateway') {
+      return <GatewayPopup device={device} onAction={handleAction} commanding={commanding} />;
+    }
+    
     return (
       <SensorPopup 
         device={device} 
@@ -88,9 +97,15 @@ export default function InteractiveMap() {
 
   const getMarkerIcon = (device) => {
     const schema = DEVICE_SCHEMAS[device.type] || DEVICE_SCHEMAS.default;
-    // Si es una finca, usamos el color de estado. Si es sensor, el color del schema.
-    const color = device.id ? (device.status || 'blue') : schema.iconColor;
-    return StatusIcons[color] || StatusIcons.blue;
+    
+    // Prioridad 1: Gateways (Icono Violeta fijo)
+    if (device.type === 'gateway') return StatusIcons.violet;
+    
+    // Prioridad 2: Fincas (Icono por su estado)
+    if (device.id) return StatusIcons[device.status] || StatusIcons.blue;
+    
+    // Prioridad 3: Sensores normales (Icono por el color del schema)
+    return StatusIcons[schema.iconColor] || StatusIcons.blue;
   };
 
   return (
@@ -101,7 +116,7 @@ export default function InteractiveMap() {
           <p style={{ color: 'var(--text-secondary)' }}>{t('map.subtitle')}</p>
         </div>
         
-        {/* Filter Bar (Simplified for brevity in the refactor) */}
+        {/* Filter Bar */}
         <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap', alignItems: 'center', background: 'rgba(255,255,255,0.03)', padding: '12px 20px', borderRadius: 'var(--radius-lg)', border: '1px solid var(--border-color)' }}>
           <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
             <label style={{ fontSize: '0.65rem', fontWeight: '700', textTransform: 'uppercase', color: 'var(--text-secondary)' }}>{t('map.filterStatus')}</label>
@@ -114,8 +129,11 @@ export default function InteractiveMap() {
             <label style={{ fontSize: '0.65rem', fontWeight: '700', textTransform: 'uppercase', color: 'var(--text-secondary)' }}>{t('map.filterType')}</label>
             <select value={typeFilter} onChange={(e) => setTypeFilter(e.target.value)} style={{ background: 'var(--bg-primary)', color: 'white', border: '1px solid var(--border-color)', padding: '6px', borderRadius: '4px' }}>
               <option value="all">{t('map.allTypes')}</option>
-              {Object.keys(DEVICE_SCHEMAS).filter(k => k !== 'default').map(type => (
-                <option key={type} value={type}>{t(`types.${type}`)}</option>
+              {Object.keys(DEVICE_SCHEMAS)
+                .filter(k => k !== 'default')
+                .sort((a,b) => a === 'gateway' ? -1 : 1) // Gateway primero
+                .map(type => (
+                  <option key={type} value={type}>{t(`types.${type}`)}</option>
               ))}
             </select>
           </div>
@@ -126,8 +144,8 @@ export default function InteractiveMap() {
         <MapContainer center={[39.5, -3.0]} zoom={6} style={{ height: '100%', width: '100%' }}>
           <TileLayer attribution='&copy; OpenStreetMap' url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
           
-          {/* Renderizado Unificado de Marcadores (Estates + Fleet) */}
-          {loading ? null : [...estates, ...fleet]
+          {/* Renderizado Unificado de Marcadores (Estates + Fleet + Gateways) */}
+          {loading ? null : [...estates, ...fleet, ...gateways]
             .filter(item => (statusFilter === 'all' || item.status === statusFilter))
             .filter(item => (typeFilter === 'all' || item.type === typeFilter))
             .map(item => (
