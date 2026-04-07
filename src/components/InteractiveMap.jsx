@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { apiClient } from '../services/apiClient';
 import 'leaflet/dist/leaflet.css';
@@ -29,12 +29,13 @@ L.Marker.prototype.options.icon = DefaultIcon;
 
 export default function InteractiveMap() {
   const navigate = useNavigate();
+  const location = useLocation();
   const { t } = useTranslation();
   const [estates, setEstates] = useState([]);
   const [fleet, setFleet] = useState([]);
   const [loading, setLoading] = useState(true);
   const [commanding, setCommanding] = useState(null); // ID del dispositivo que está recibiendo comando
-  const [statusFilter, setStatusFilter] = useState('all');
+  const [statusFilter, setStatusFilter] = useState(location.state?.initialStatus || 'all');
   const [typeFilter, setTypeFilter] = useState('all');
 
   useEffect(() => {

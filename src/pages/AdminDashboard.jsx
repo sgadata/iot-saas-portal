@@ -32,9 +32,9 @@ export default function AdminDashboard() {
   }, []);
 
   const kpis = [
-    { title: t('dashboard.kpiEstates'), value: metrics.totalEstates, icon: <Users size={24} color="var(--accent-primary)" />, path: '/map' },
-    { title: t('dashboard.kpiSensors'), value: metrics.activeSensors, icon: <Activity size={24} color="var(--status-green)" />, path: '/telemetry' },
-    { title: t('dashboard.kpiAlerts'), value: metrics.criticalAlerts, icon: <AlertTriangle size={24} color="var(--status-red)" />, path: '/map' },
+    { key: 'all', title: t('dashboard.kpiEstates'), value: metrics.totalEstates, icon: <Users size={24} color="var(--accent-primary)" />, path: '/map' },
+    { key: 'all', title: t('dashboard.kpiSensors'), value: metrics.activeSensors, icon: <Activity size={24} color="var(--status-green)" />, path: '/telemetry' },
+    { key: 'red', title: t('dashboard.kpiAlerts'), value: metrics.criticalAlerts, icon: <AlertTriangle size={24} color="var(--status-red)" />, path: '/map' },
   ];
 
   return (
@@ -71,7 +71,7 @@ export default function AdminDashboard() {
           <div 
             key={idx} 
             className="card kpi-hover-card" 
-            onClick={() => navigate(kpi.path)}
+            onClick={() => navigate(kpi.path, { state: { initialStatus: kpi.key } })}
             style={{ 
               display: 'flex', 
               alignItems: 'center', 
