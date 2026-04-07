@@ -32,10 +32,14 @@ Repo GitHub: `https://github.com/sgadata/iot-saas-portal`
 - **Gráficos:** **Recharts** (SVG responsivo para las curvas de telemetría).
 - **Mapas:** **Leaflet.js**. Utilizamos el motor abierto de **OpenStreetMap** con una capa CSS de inversión de color para el modo oscuro, evitando costes de APIs propietarias (como Google Maps).
 
-### 🔍 Funcionalidades Clave
 - **i18n (Internacionalización):** Sistema bilingüe (ES/EN) gestionado en `src/i18n.js`.
 - **Fleet Explorer:** Buscador indexado que permite filtrar por atributos geográficos (CCAA) y técnicos (EUI).
 - **Diseño Responsivo:** Menú "Hamburguesa" automático para técnicos que usen tablets o móviles en campo.
+- **Suite de Administración:**
+  - **Audit Logs:** Registro de eventos para trazabilidad de comandos LoRaWAN.
+  - **Alert Rules:** Motor de reglas inteligente para disparar notificaciones basadas en condiciones.
+  - **Executive Reports:** Motor de exportación de datos históricos en formato CSV.
+  - **Marca Blanca (White Label):** Motor de personalización corporativa (Colores dinámicos).
 
 ---
 

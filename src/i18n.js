@@ -16,7 +16,10 @@ const resources = {
         "liveMap": "Live Map",
         "telemetry": "Telemetry (Demo)",
         "settings": "Settings",
-        "provisioning": "Add Sensor"
+        "provisioning": "Add Sensor",
+        "administration": "Administration",
+        "auditLogs": "Audit Logs",
+        "alertRules": "Alert Rules"
       },
       "login": {
         "signIn": "Sign In",
@@ -134,10 +137,16 @@ const resources = {
         "subtitle": "Global telemetry search filtered by geographical and hardware attributes.",
         "searchPlaceholder": "Search by EUI or custom Name...",
         "allCountries": "All Countries",
-        "allCommunities": "All Communities",
         "allTypes": "All Types",
         "colType": "Profile",
         "colBattery": "Battery"
+      },
+      "admin": {
+        "auditLogs": "Security & Audit Logs",
+        "alertRules": "Intelligent Alert Rules",
+        "branding": "Branding & White Label",
+        "reports": "Executive Reports",
+        "exportBtn": "Generate Report (PDF/CSV)"
       }
     }
   },
@@ -153,7 +162,10 @@ const resources = {
         "liveMap": "Mapa en Vivo",
         "telemetry": "Telemetría (Demo)",
         "settings": "Ajustes",
-        "provisioning": "Añadir Sensor"
+        "provisioning": "Añadir Sensor",
+        "administration": "Administración",
+        "auditLogs": "Logs de Auditoría",
+        "alertRules": "Reglas de Alerta"
       },
       "login": {
         "signIn": "Iniciar Sesión",
@@ -271,10 +283,16 @@ const resources = {
         "subtitle": "Buscador global de telemetría indexado por variables geográficas.",
         "searchPlaceholder": "Busca por Device EUI o Nombre de equipo...",
         "allCountries": "Todos los Países",
-        "allCommunities": "Todas las CCAA",
         "allTypes": "Todos los Sensores",
         "colType": "Firma (Perfil)",
         "colBattery": "Batería"
+      },
+      "admin": {
+        "auditLogs": "Logs de Auditoría y Seguridad",
+        "alertRules": "Reglas de Alerta Inteligente",
+        "branding": "Marca Blanca y Personalización",
+        "reports": "Informes Ejecutivos",
+        "exportBtn": "Generar Informe (PDF/CSV)"
       }
     }
   }

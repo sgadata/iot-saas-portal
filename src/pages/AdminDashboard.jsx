@@ -8,6 +8,20 @@ export default function AdminDashboard() {
   const navigate = useNavigate();
   const { t } = useTranslation();
   const [metrics, setMetrics] = useState({ totalEstates: 0, activeSensors: 0, criticalAlerts: 0 });
+  const [exporting, setExporting] = useState(false);
+
+  const handleExport = async () => {
+    setExporting(true);
+    await new Promise(r => setTimeout(r, 2000));
+    const csvContent = "data:text/csv;charset=utf-8,ID,Metric,Value\n1,Flow,120\n2,Temp,22";
+    const encodedUri = encodeURI(csvContent);
+    const link = document.createElement("a");
+    link.setAttribute("href", encodedUri);
+    link.setAttribute("download", "SGA_Monthly_Report.csv");
+    document.body.appendChild(link);
+    link.click();
+    setExporting(false);
+  };
 
   useEffect(() => {
     async function loadMetrics() {
@@ -28,7 +42,27 @@ export default function AdminDashboard() {
       {/* Header Area */}
       <div>
         <h2 style={{ fontSize: '1.875rem', fontWeight: '700', marginBottom: '0.5rem' }}>{t('dashboard.overview')}</h2>
-        <p style={{ color: 'var(--text-secondary)' }}>{t('dashboard.welcome')}</p>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '1rem' }}>
+          <p style={{ color: 'var(--text-secondary)' }}>{t('dashboard.welcome')}</p>
+          <button 
+            onClick={handleExport}
+            disabled={exporting}
+            style={{ 
+              background: 'rgba(59, 130, 246, 0.1)', 
+              color: 'var(--accent-primary)', 
+              border: '1px solid var(--accent-primary)', 
+              padding: '8px 16px', 
+              borderRadius: 'var(--radius-md)', 
+              fontSize: '0.875rem', 
+              fontWeight: '600',
+              cursor: 'pointer',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '8px'
+            }}>
+            {exporting ? 'Generating...' : `📊 ${t('admin.exportBtn')}`}
+          </button>
+        </div>
       </div>
 
       {/* KPI Cards */}

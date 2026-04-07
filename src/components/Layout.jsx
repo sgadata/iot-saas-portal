@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Outlet, Link, useLocation } from 'react-router-dom';
-import { LayoutDashboard, Map, Activity, Settings, Bell, LogOut, Globe, PlusSquare, Menu, X } from 'lucide-react';
+import { LayoutDashboard, Map, Activity, Settings, Bell, LogOut, Globe, PlusSquare, Menu, X, ShieldCheck, ClipboardList, PenTool } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '../context/AuthContext';
 
@@ -15,7 +15,6 @@ export default function Layout() {
     { key: 'dashboard', path: '/', icon: <LayoutDashboard size={20} />, roles: ['admin', 'tecnico'] },
     { key: 'liveMap', path: '/map', icon: <Map size={20} />, roles: ['admin', 'tecnico'] },
     { key: 'telemetry', path: '/telemetry', icon: <Activity size={20} />, roles: ['admin', 'tecnico'] },
-    { key: 'settings', path: '/settings', icon: <Settings size={20} />, roles: ['admin'] },
     { key: 'provisioning', name: 'Add Sensor', path: '/provisioning', icon: <PlusSquare size={20} />, roles: ['admin', 'tecnico'], requiresProvisioning: true } 
   ].filter(item => {
     const hasRole = item.roles.includes(user?.role || '');
@@ -24,6 +23,12 @@ export default function Layout() {
     }
     return hasRole;
   });
+
+  const adminItems = [
+    { key: 'alertRules', path: '/rules', icon: <ShieldCheck size={20} />, roles: ['admin'] },
+    { key: 'auditLogs', path: '/audit', icon: <ClipboardList size={20} />, roles: ['admin'] },
+    { key: 'settings', path: '/settings', icon: <Settings size={20} />, roles: ['admin'] },
+  ].filter(item => item.roles.includes(user?.role || ''));
 
   return (
     <div className="app-container">
@@ -81,6 +86,42 @@ export default function Layout() {
               </Link>
             )
           })}
+
+          {adminItems.length > 0 && (
+            <>
+              <div style={{ marginTop: '1.5rem', marginBottom: '0.5rem', padding: '0 14px', fontSize: '0.7rem', fontWeight: '700', color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                {t('menu.administration')}
+              </div>
+              {adminItems.map((item) => {
+                const isActive = location.pathname === item.path;
+                return (
+                  <Link 
+                    key={item.key} 
+                    to={item.path}
+                    onClick={() => setIsMobileMenuOpen(false)}
+                    style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '12px',
+                      padding: '10px 14px',
+                      borderRadius: 'var(--radius-md)',
+                      textDecoration: 'none',
+                      color: isActive ? 'white' : 'var(--text-secondary)',
+                      backgroundColor: isActive ? 'rgba(59, 130, 246, 0.15)' : 'transparent',
+                      border: isActive ? '1px solid rgba(59, 130, 246, 0.3)' : '1px solid transparent',
+                      transition: 'all 0.2s',
+                      fontWeight: isActive ? '500' : '400'
+                    }}
+                  >
+                    <span style={{ color: isActive ? 'var(--accent-primary)' : 'inherit' }}>
+                      {item.icon}
+                    </span>
+                    {t(`menu.${item.key}`)}
+                  </Link>
+                )
+              })}
+            </>
+          )}
         </nav>
       </aside>
 

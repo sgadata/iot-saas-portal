@@ -26,6 +26,18 @@ const DATA_CACHE = {
     { devEui: 'F8C041000181A005', name: 'Bomba Norte Agua', type: 'water', status: 'green', country: 'España', community: 'Cataluña', estate: 'Port Complex', battery: 60, lastSeen: '30m ago', config: { uplinkInterval: '1h' } },
     { devEui: 'D8C041000181V006', name: 'Válvula Riego Sector 1', type: 'valve', status: 'green', valveStatus: 'closed', schedule: { start: '08:00', end: '09:00', active: false }, country: 'España', community: 'Extremadura', estate: 'Finca Olivar', battery: 88, lastSeen: '1m ago', position: [38.9168, -6.3438] },
   ],
+  rules: [
+    { id: 1, name: 'High Temperature Alert', sensorType: 'temp', condition: '>', threshold: 35, severity: 'critical', active: true },
+    { id: 2, name: 'Low Battery Warning', sensorType: 'all', condition: '<', threshold: 15, severity: 'warning', active: true },
+  ],
+  auditLogs: [
+    { id: 1, time: '2026-04-07 10:30:15', user: 'Sebastian', action: 'OPEN_VALVE', target: 'D8C041000181V006' },
+    { id: 2, time: '2026-04-07 09:15:00', user: 'Gerardo', action: 'CHANGE_CONFIG', target: 'A84041000181A002' },
+  ],
+  branding: {
+    logoUrl: null,
+    primaryColor: '#3b82f6'
+  },
   telemetryProfiles: {
     "root": [
       { time: '00:00', value: 120, battery: 85, rssi: -65 },
@@ -129,8 +141,45 @@ export const apiClient = {
   triggerAction: async (devEui, actionType) => {
     if (USE_MOCK_API) {
       console.log(`[QUICK ACTION] ${actionType} on device ${devEui}`);
-      await delay(1200); // Latencia simulada
+      await delay(1200);
+      apiClient.logAction('Sebastian', actionType, devEui); // Mock user
       return { success: true, message: `Action ${actionType} executed correctly` };
+    }
+  },
+
+  logAction: (user, action, target) => {
+    const newLog = {
+      id: DATA_CACHE.auditLogs.length + 1,
+      time: new Date().toLocaleString(),
+      user,
+      action,
+      target
+    };
+    DATA_CACHE.auditLogs.unshift(newLog);
+  },
+
+  getAuditLogs: async () => {
+    if (USE_MOCK_API) {
+      await delay(500);
+      return DATA_CACHE.auditLogs;
+    }
+  },
+
+  getAlertRules: async () => {
+    if (USE_MOCK_API) {
+      await delay(500);
+      return DATA_CACHE.rules;
+    }
+  },
+
+  getBranding: async () => {
+    if (USE_MOCK_API) return DATA_CACHE.branding;
+  },
+
+  updateBranding: async (newBranding) => {
+    if (USE_MOCK_API) {
+      DATA_CACHE.branding = { ...DATA_CACHE.branding, ...newBranding };
+      return { success: true };
     }
   }
 };

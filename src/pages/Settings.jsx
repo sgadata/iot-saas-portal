@@ -13,6 +13,13 @@ export default function Settings() {
     { id: 3, name: 'Building Omega Rep', role: 'Client', email: 'omega@client.com', status: 'Pending' },
   ]);
 
+  const [branding, setBranding] = useState({ primaryColor: '#3b82f6', logoUrl: '' });
+
+  const handleColorChange = (color) => {
+    setBranding({ ...branding, primaryColor: color });
+    document.documentElement.style.setProperty('--accent-primary', color);
+  };
+
   if (user?.role !== 'admin') {
     return (
       <div className="animate-fade-in card" style={{ textAlign: 'center', padding: '4rem' }}>
@@ -80,6 +87,42 @@ export default function Settings() {
               ))}
             </tbody>
           </table>
+        </div>
+      </div>
+
+      <div className="card">
+        <h3 style={{ fontSize: '1.125rem', marginBottom: '1.25rem', borderBottom: '1px solid var(--border-color)', paddingBottom: '0.75rem' }}>{t('admin.branding')}</h3>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '2rem' }}>
+          <div>
+            <p style={{ fontSize: '0.875rem', color: 'var(--text-secondary)', marginBottom: '1rem' }}>Corporate Color Scheme</p>
+            <div style={{ display: 'flex', gap: '10px' }}>
+              {['#3b82f6', '#10b981', '#f59e0b', '#ec4899', '#8b5cf6'].map(color => (
+                <button 
+                  key={color}
+                  onClick={() => handleColorChange(color)}
+                  style={{ 
+                    width: '32px', 
+                    height: '32px', 
+                    borderRadius: '50%', 
+                    backgroundColor: color, 
+                    border: branding.primaryColor === color ? '3px solid white' : 'none',
+                    cursor: 'pointer' 
+                  }}
+                />
+              ))}
+            </div>
+          </div>
+          <div>
+            <p style={{ fontSize: '0.875rem', color: 'var(--text-secondary)', marginBottom: '1rem' }}>Dashboard Logo</p>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+               <div style={{ width: '100px', height: '40px', background: 'var(--bg-primary)', border: '1px dashed var(--border-color)', borderRadius: '4px', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.7rem' }}>
+                 No logo uploaded
+               </div>
+               <button style={{ background: 'transparent', border: '1px solid var(--border-color)', color: 'var(--text-primary)', padding: '8px 12px', borderRadius: '4px', fontSize: '0.75rem', cursor: 'pointer' }}>
+                 Change Logo
+               </button>
+            </div>
+          </div>
         </div>
       </div>
     </div>

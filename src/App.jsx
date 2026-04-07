@@ -8,6 +8,8 @@ import Login from './pages/Login';
 import Settings from './pages/Settings';
 import Provisioning from './pages/Provisioning';
 import FleetExplorer from './pages/FleetExplorer';
+import AlertRules from './pages/AlertRules';
+import AuditLogs from './pages/AuditLogs';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import './App.css';
 
@@ -42,6 +44,8 @@ function App() {
             <Route path="telemetry/:deviceId" element={<DeviceTelemetry />} />
             <Route path="settings" element={<Settings />} />
             <Route path="provisioning" element={<Provisioning />} />
+            <Route path="rules" element={<AlertRules />} />
+            <Route path="audit" element={<AuditLogs />} />
           </Route>
         </Routes>
       </HashRouter>
