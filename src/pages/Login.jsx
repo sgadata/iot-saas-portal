@@ -38,12 +38,21 @@ export default function Login() {
                 <div style={{ position: 'absolute', width: '600px', height: '600px', background: 'radial-gradient(circle, rgba(59,130,246,0.15) 0%, rgba(0,0,0,0) 70%)', top: '-10%', left: '-10%' }}></div>
                 
                 <div style={{ zIndex: 1, animation: 'fadeIn 1s ease-out' }}>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '20px', marginBottom: '2.5rem' }}>
-                        <img 
-                          src="media__1775554464059.png" 
-                          alt="SGA Data Logo" 
-                          style={{ height: '120px', width: 'auto', objectFit: 'contain', borderRadius: '12px' }} 
-                        />
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '25px', marginBottom: '2.5rem' }}>
+                        {/* SGA DATA SVG LOGO LARGE */}
+                        <svg width="100" height="100" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                          <path d="M50 5L89.5 27.5V72.5L50 95L10.5 72.5V27.5L50 5Z" fill="url(#paint_login)" stroke="var(--accent-primary)" strokeWidth="3"/>
+                          <path d="M20 50H80M50 20V80M35 35L65 65M35 65L65 35" stroke="white" strokeOpacity="0.1" strokeWidth="1"/>
+                          <circle cx="50" cy="50" r="20" fill="white" fillOpacity="0.05" stroke="var(--accent-primary)" strokeWidth="1"/>
+                          <path d="M40 50L60 50" stroke="white" strokeWidth="4" strokeLinecap="round"/>
+                          <path d="M50 40L50 60" stroke="white" strokeWidth="4" strokeLinecap="round"/>
+                          <defs>
+                            <linearGradient id="paint_login" x1="50" y1="5" x2="50" y2="95" gradientUnits="userSpaceOnUse">
+                              <stop stopColor="#3b82f6"/>
+                              <stop offset="1" stopColor="#1e3a8a"/>
+                            </linearGradient>
+                          </defs>
+                        </svg>
                         <div style={{ display: 'flex', flexDirection: 'column' }}>
                             <h1 style={{ fontSize: '3.5rem', fontWeight: '800', color: 'white', letterSpacing: '-1.5px', lineHeight: '1' }}>SGA DATA</h1>
                             <span style={{ fontSize: '1rem', color: 'var(--accent-primary)', fontWeight: '700', textTransform: 'uppercase', letterSpacing: '0.1em' }}>Data & Energy Consulting</span>
