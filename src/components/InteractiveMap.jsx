@@ -22,16 +22,33 @@ export default function InteractiveMap() {
   const navigate = useNavigate();
   const { t } = useTranslation();
   const [estates, setEstates] = useState([]);
+  const [fleet, setFleet] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [commanding, setCommanding] = useState(null); // ID del dispositivo que está recibiendo comando
 
   useEffect(() => {
     async function loadData() {
-      const data = await apiClient.getTopologies();
-      setEstates(data);
+      const [estatesData, fleetData] = await Promise.all([
+        apiClient.getTopologies(),
+        apiClient.getDeviceFleet()
+      ]);
+      setEstates(estatesData);
+      setFleet(fleetData.filter(d => d.position)); // Solo los que tengan coordenadas
       setLoading(false);
     }
     loadData();
   }, []);
+
+  const handleCommand = async (devEui, action, minutes = null) => {
+    setCommanding(devEui);
+    const res = await apiClient.sendCommand(devEui, action, minutes);
+    if (res.success) {
+      // Recargar datos para ver el cambio de estado (simulado)
+      const fleetData = await apiClient.getDeviceFleet();
+      setFleet(fleetData.filter(d => d.position));
+    }
+    setCommanding(null);
+  };
 
   return (
     <div className="animate-fade-in" style={{ display: 'flex', flexDirection: 'column', gap: '1rem', height: '100%' }}>
@@ -57,15 +74,12 @@ export default function InteractiveMap() {
           />
           
           {loading ? null : estates.map(estate => (
-            <Marker key={estate.id} position={estate.position}>
+            <Marker key={`est-${estate.id}`} position={estate.position}>
               <Popup>
-                <div style={{ padding: '4px' }}>
+                <div style={{ padding: '4px', minWidth: '150px' }}>
                   <h4 style={{ margin: '0 0 5px 0', fontSize: '1rem' }}>{estate.name}</h4>
                   <p style={{ margin: '0 0 10px 0', fontSize: '0.875rem', fontWeight: '500', color: 'var(--text-secondary)' }}>
                      {t(`types.${estate.type}`)}
-                  </p>
-                  <p style={{ margin: '0 0 10px 0', fontSize: '0.875rem' }}>
-                    {t('map.status')}: <span style={{ color: `var(--status-${estate.status})`, fontWeight: 'bold', textTransform: 'capitalize' }}>{t(`map.${estate.status === 'green' ? 'normal' : estate.status === 'orange' ? 'warning' : 'critical'}`).toLowerCase()}</span>
                   </p>
                   <button 
                     onClick={() => navigate(`/telemetry/${estate.id}`)}
@@ -77,6 +91,65 @@ export default function InteractiveMap() {
               </Popup>
             </Marker>
           ))}
+
+          {/* Individual Sensors (like Valves) */}
+          {loading ? null : fleet.map(device => (
+            <Marker key={`dev-${device.devEui}`} position={device.position}>
+              <Popup>
+                <div style={{ padding: '4px', minWidth: '200px' }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
+                    <h4 style={{ margin: 0, fontSize: '1rem' }}>{device.name}</h4>
+                    <div style={{ width: '10px', height: '10px', borderRadius: '50%', background: device.valveStatus === 'open' ? 'var(--status-green)' : 'var(--border-color)' }}></div>
+                  </div>
+                  
+                  <p style={{ margin: '0 0 12px 0', fontSize: '0.825rem', color: 'var(--text-secondary)' }}>
+                    {t(`types.${device.type}`)} | EUI: {device.devEui.slice(-4)}
+                  </p>
+
+                  {device.type === 'valve' && (
+                    <div style={{ background: 'rgba(255,255,255,0.03)', padding: '10px', borderRadius: '8px', display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                      <p style={{ fontSize: '0.75rem', fontWeight: '600', textTransform: 'uppercase', color: 'var(--text-secondary)', marginBottom: '4px' }}>
+                        {t('telemetry.valve_status')}: <span style={{ color: device.valveStatus === 'open' ? 'var(--status-green)' : 'var(--text-primary)' }}>{t(`telemetry.${device.valveStatus}`)}</span>
+                      </p>
+                      
+                      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px' }}>
+                        <button 
+                          disabled={commanding === device.devEui || device.valveStatus === 'open'}
+                          onClick={() => handleCommand(device.devEui, 'OPEN')}
+                          style={{ background: device.valveStatus === 'open' ? 'var(--bg-primary)' : 'var(--status-green)', color: 'white', border: 'none', padding: '8px', borderRadius: '6px', cursor: 'pointer', fontSize: '0.75rem', fontWeight: '600', opacity: commanding === device.devEui ? 0.5 : 1 }}
+                        >
+                          {commanding === device.devEui ? t('telemetry.sending') : t('telemetry.btn_open')}
+                        </button>
+                        <button 
+                          disabled={commanding === device.devEui || device.valveStatus === 'closed'}
+                          onClick={() => handleCommand(device.devEui, 'CLOSE')}
+                          style={{ background: 'var(--status-red)', color: 'white', border: 'none', padding: '8px', borderRadius: '6px', cursor: 'pointer', fontSize: '0.75rem', fontWeight: '600', opacity: commanding === device.devEui ? 0.5 : 1 }}
+                        >
+                          {t('telemetry.btn_close')}
+                        </button>
+                      </div>
+
+                      <button 
+                        disabled={commanding === device.devEui}
+                        onClick={() => handleCommand(device.devEui, 'OPEN', 30)}
+                        style={{ background: 'var(--bg-primary)', color: 'var(--text-primary)', border: '1px solid var(--border-color)', padding: '8px', borderRadius: '6px', cursor: 'pointer', fontSize: '0.75rem', fontWeight: '500' }}
+                      >
+                        {t('telemetry.btn_timer')}
+                      </button>
+                    </div>
+                  )}
+
+                  <button 
+                    onClick={() => navigate(`/telemetry/${device.devEui}`)}
+                    style={{ background: 'transparent', color: 'var(--text-secondary)', border: 'none', padding: '6px 0', fontSize: '0.75rem', cursor: 'pointer', width: '100%', marginTop: '8px', textAlign: 'center' }}
+                  >
+                    {t('map.viewTelemetryBtn')} →
+                  </button>
+                </div>
+              </Popup>
+            </Marker>
+          ))}
+
         </MapContainer>
       </div>
     </div>

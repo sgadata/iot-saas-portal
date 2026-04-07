@@ -15,17 +15,35 @@ export default function DeviceTelemetry() {
   useEffect(() => {
     async function loadTelemetry() {
        const result = await apiClient.getTelemetry(deviceId);
-       setTelemetry(result); // result tiene { type: 'gas', data: [...] }
+       setTelemetry(result); 
+       
+       // Si es una válvula, buscamos su estado en la flota
+       const fleet = await apiClient.getDeviceFleet();
+       const device = fleet.find(d => d.devEui === deviceId);
+       if (device) {
+           setTelemetry(prev => ({ ...prev, name: device.name, valveStatus: device.valveStatus }));
+       }
+       
        setLoading(false);
     }
     loadTelemetry();
   }, [deviceId]);
+
+  const handleCommand = async (action, minutes = null) => {
+    setLoading(true);
+    const res = await apiClient.sendCommand(deviceId, action, minutes);
+    if (res.success) {
+        setTelemetry(prev => ({ ...prev, valveStatus: action === 'OPEN' ? 'open' : 'closed' }));
+    }
+    setLoading(false);
+  };
 
   const getDynamicLayout = () => {
     switch(telemetry.type) {
       case 'gas': return { icon: <Flame size={24} color="#f97316" />, color: 'rgba(249, 115, 22, 0.1)' };
       case 'temp': return { icon: <Thermometer size={24} color="#ec4899" />, color: 'rgba(236, 72, 153, 0.1)' };
       case 'light': return { icon: <Sun size={24} color="#eab308" />, color: 'rgba(234, 179, 8, 0.1)' };
+      case 'valve': return { icon: <Flame size={24} color="var(--status-green)" />, color: 'rgba(16, 185, 129, 0.1)' };
       default: return { icon: <Droplet size={24} color="var(--accent-primary)" />, color: 'rgba(59, 130, 246, 0.1)' };
     }
   };
@@ -80,6 +98,42 @@ export default function DeviceTelemetry() {
             <div style={{ fontSize: '1.5rem', fontWeight: 'bold' }}>-64 dBm</div>
           </div>
         </div>
+
+        {telemetry.type === 'valve' && (
+          <div className="card" style={{ display: 'flex', flexDirection: 'column', gap: '1rem', border: '1px solid var(--accent-primary)' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <span style={{ fontSize: '0.875rem', fontWeight: '600', color: 'var(--accent-primary)' }}>ACTUATOR CONTROL</span>
+                <span style={{ fontSize: '0.75rem', padding: '2px 8px', borderRadius: '10px', background: telemetry.valveStatus === 'open' ? 'var(--status-green)' : 'var(--border-color)', color: 'white' }}>
+                    {t(`telemetry.${telemetry.valveStatus}`)}
+                </span>
+            </div>
+            
+            <div style={{ display: 'flex', gap: '0.75rem' }}>
+                <button 
+                  onClick={() => handleCommand('OPEN')}
+                  disabled={loading || telemetry.valveStatus === 'open'}
+                  style={{ flex: 1, padding: '10px', background: 'var(--status-green)', color: 'white', border: 'none', borderRadius: 'var(--radius-md)', fontWeight: 'bold', cursor: 'pointer', opacity: loading ? 0.5 : 1 }}
+                >
+                  {t('telemetry.btn_open')}
+                </button>
+                <button 
+                  onClick={() => handleCommand('CLOSE')}
+                  disabled={loading || telemetry.valveStatus === 'closed'}
+                  style={{ flex: 1, padding: '10px', background: 'var(--status-red)', color: 'white', border: 'none', borderRadius: 'var(--radius-md)', fontWeight: 'bold', cursor: 'pointer', opacity: loading ? 0.5 : 1 }}
+                >
+                  {t('telemetry.btn_close')}
+                </button>
+            </div>
+            
+            <button 
+              onClick={() => handleCommand('OPEN', 30)}
+              disabled={loading}
+              style={{ padding: '8px', background: 'transparent', border: '1px solid var(--border-color)', color: 'var(--text-primary)', borderRadius: 'var(--radius-md)', cursor: 'pointer' }}
+            >
+               ⏱️ {t('telemetry.btn_timer')}
+            </button>
+          </div>
+        )}
       </div>
 
       {/* Charts Area */}

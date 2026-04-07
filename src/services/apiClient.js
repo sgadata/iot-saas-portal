@@ -16,6 +16,7 @@ const DATA_CACHE = {
     { id: 3, name: 'Plaza Center', position: [37.3891, -5.9845], status: 'orange', type: 'temp' },
     { id: 4, name: 'Greenhouse Sigma', position: [36.8340, -2.4637], status: 'green', type: 'light' },
     { id: 5, name: 'Port Complex', position: [41.3851, 2.1734], status: 'green', type: 'water' },
+    { id: 6, name: 'Finca Olivar', position: [38.9168, -6.3438], status: 'green', type: 'valve' },
   ],
   fleet: [
     { devEui: 'A84041000181A001', name: 'Contador General', type: 'water', status: 'green', country: 'España', community: 'Comunidad de Madrid', estate: 'Estate Alpha', battery: 85, lastSeen: '10m ago' },
@@ -23,6 +24,7 @@ const DATA_CACHE = {
     { devEui: '2B7E151628AED2A6', name: 'Sala Frío Temp', type: 'temp', status: 'orange', country: 'España', community: 'Andalucía', estate: 'Plaza Center', battery: 40, lastSeen: '1h ago' },
     { devEui: 'A84041000181A004', name: 'Granja Luz LuxSensor', type: 'light', status: 'green', country: 'España', community: 'Andalucía', estate: 'Greenhouse Sigma', battery: 95, lastSeen: '5m ago' },
     { devEui: 'F8C041000181A005', name: 'Bomba Norte Agua', type: 'water', status: 'green', country: 'España', community: 'Cataluña', estate: 'Port Complex', battery: 60, lastSeen: '30m ago' },
+    { devEui: 'D8C041000181V006', name: 'Válvula Riego Sector 1', type: 'valve', status: 'green', valveStatus: 'closed', country: 'España', community: 'Extremadura', estate: 'Finca Olivar', battery: 88, lastSeen: '1m ago', position: [38.9168, -6.3438] },
   ],
   telemetryProfiles: {
     "root": [
@@ -90,5 +92,19 @@ export const apiClient = {
           await delay(600);
           return DATA_CACHE.fleet;
       }
+  },
+
+  sendCommand: async (devEui, action, minutes = null) => {
+    if (USE_MOCK_API) {
+      console.log(`[MOCK DOWNLINK] Sending ${action} to ${devEui}${minutes ? ` for ${minutes} min` : ''}`);
+      await delay(2000); // Simulamos la latencia LoRaWAN
+      
+      const device = DATA_CACHE.fleet.find(d => d.devEui === devEui);
+      if (device) {
+        device.valveStatus = action === 'OPEN' ? 'open' : 'closed';
+      }
+      
+      return { success: true, message: `Command ${action} sent successfully` };
+    }
   }
 };

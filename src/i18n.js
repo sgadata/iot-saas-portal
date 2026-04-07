@@ -69,13 +69,23 @@ const resources = {
         
         "light_title": "Ambient Light Exposure",
         "light_metric": "Illuminance",
-        "light_unit": "Lux"
+        "light_unit": "Lux",
+        
+        "valve_title": "Smart Valve Control",
+        "valve_status": "Current State",
+        "open": "Open",
+        "closed": "Closed",
+        "btn_open": "Open Valve",
+        "btn_close": "Close Valve",
+        "btn_timer": "Open (30m Timer)",
+        "sending": "Sending command..."
       },
       "types": {
         "water": "Water Meter",
         "gas": "Gas Analyzer",
         "temp": "Thermometer",
-        "light": "Light Sensor"
+        "light": "Light Sensor",
+        "valve": "Irrigation Valve"
       },
       "settings": {
         "title": "Corporate Settings",
@@ -180,13 +190,23 @@ const resources = {
         
         "light_title": "Exposición de Luz Ambiental",
         "light_metric": "Iluminancia",
-        "light_unit": "Lux"
+        "light_unit": "Lux",
+
+        "valve_title": "Control de Válvula Inteligente",
+        "valve_status": "Estado Actual",
+        "open": "Abierta",
+        "closed": "Cerrada",
+        "btn_open": "Abrir Válvula",
+        "btn_close": "Cerrar Válvula",
+        "btn_timer": "Abrir (Timer 30m)",
+        "sending": "Enviando comando..."
       },
       "types": {
         "water": "Medidor de Agua",
         "gas": "Analizador de Gas",
         "temp": "Termómetro",
-        "light": "Sensor de Luz"
+        "light": "Sensor de Luz",
+        "valve": "Válvula de Riego"
       },
       "settings": {
         "title": "Ajustes Corporativos",
