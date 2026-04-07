@@ -43,13 +43,13 @@ export default function Layout() {
         <div style={{ marginBottom: '2rem', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
             <img 
-              src="sga_data_logo_premium_1775557656079.png" 
+              src="media__1775554464059.png" 
               alt="SGA Data Logo" 
-              style={{ height: '40px', width: 'auto', objectFit: 'contain' }} 
+              style={{ height: '50px', width: 'auto', objectFit: 'contain', borderRadius: '4px' }} 
             />
             <div style={{ display: 'flex', flexDirection: 'column' }}>
               <h2 style={{ fontSize: '1.1rem', fontWeight: '800', color: 'white', margin: 0, letterSpacing: '0.02em' }}>SGA DATA</h2>
-              <span style={{ fontSize: '0.65rem', color: 'var(--accent-primary)', fontWeight: '700', textTransform: 'uppercase', marginTop: '-4px' }}>IoT Commander</span>
+              <span style={{ fontSize: '0.6rem', color: 'var(--accent-primary)', fontWeight: '700', textTransform: 'uppercase', marginTop: '-2px' }}>IoT Commander</span>
             </div>
           </div>
           <button 

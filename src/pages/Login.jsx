@@ -40,13 +40,13 @@ export default function Login() {
                 <div style={{ zIndex: 1, animation: 'fadeIn 1s ease-out' }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '20px', marginBottom: '2.5rem' }}>
                         <img 
-                          src="sga_data_logo_premium_1775557656079.png" 
+                          src="media__1775554464059.png" 
                           alt="SGA Data Logo" 
-                          style={{ height: '80px', width: 'auto', objectFit: 'contain' }} 
+                          style={{ height: '120px', width: 'auto', objectFit: 'contain', borderRadius: '12px' }} 
                         />
                         <div style={{ display: 'flex', flexDirection: 'column' }}>
-                            <h1 style={{ fontSize: '3rem', fontWeight: '800', color: 'white', letterSpacing: '-1.5px', lineHeight: '1' }}>SGA DATA</h1>
-                            <span style={{ fontSize: '0.875rem', color: 'var(--accent-primary)', fontWeight: '700', textTransform: 'uppercase', letterSpacing: '0.1em' }}>IoT Commander & Analytics</span>
+                            <h1 style={{ fontSize: '3.5rem', fontWeight: '800', color: 'white', letterSpacing: '-1.5px', lineHeight: '1' }}>SGA DATA</h1>
+                            <span style={{ fontSize: '1rem', color: 'var(--accent-primary)', fontWeight: '700', textTransform: 'uppercase', letterSpacing: '0.1em' }}>Data & Energy Consulting</span>
                         </div>
                     </div>
                     <p style={{ fontSize: '1.25rem', color: 'var(--text-secondary)', maxWidth: '500px', lineHeight: '1.6' }}>
