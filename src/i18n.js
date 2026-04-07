@@ -49,7 +49,11 @@ const resources = {
         "critical": "Critical",
         "activeSensors": "Active Sensors",
         "status": "Status",
-        "viewTelemetryBtn": "View Telemetry"
+        "viewTelemetryBtn": "View Telemetry",
+        "filterStatus": "Filter by Status",
+        "filterType": "Filter by Type",
+        "allStatuses": "All Statuses",
+        "allTypes": "All Types"
       },
       "telemetry": {
         "title": "Sensor Analytics",
@@ -217,7 +221,11 @@ const resources = {
         "critical": "Crítico",
         "activeSensors": "Sensores Activos",
         "status": "Estado",
-        "viewTelemetryBtn": "Ver Telemetría"
+        "viewTelemetryBtn": "Ver Telemetría",
+        "filterStatus": "Filtrar por Estado",
+        "filterType": "Filtrar por Tipo",
+        "allStatuses": "Todos los Estados",
+        "allTypes": "Todos los Tipos"
       },
       "telemetry": {
         "title": "Analítica del Sensor",

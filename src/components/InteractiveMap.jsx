@@ -34,6 +34,8 @@ export default function InteractiveMap() {
   const [fleet, setFleet] = useState([]);
   const [loading, setLoading] = useState(true);
   const [commanding, setCommanding] = useState(null); // ID del dispositivo que está recibiendo comando
+  const [statusFilter, setStatusFilter] = useState('all');
+  const [typeFilter, setTypeFilter] = useState('all');
 
   useEffect(() => {
     async function loadData() {
@@ -67,15 +69,56 @@ export default function InteractiveMap() {
 
   return (
     <div className="animate-fade-in" style={{ display: 'flex', flexDirection: 'column', gap: '1rem', height: '100%' }}>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', flexWrap: 'wrap', gap: '1rem' }}>
         <div>
           <h2 style={{ fontSize: '1.875rem', fontWeight: '700' }}>{t('map.title')}</h2>
           <p style={{ color: 'var(--text-secondary)' }}>{t('map.subtitle')}</p>
         </div>
-        <div style={{ display: 'flex', gap: '10px' }}>
-            <span style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '0.875rem' }}><div style={{ width: '12px', height: '12px', borderRadius: '50%', background: 'var(--status-green)'}}></div> {t('map.normal')}</span>
-            <span style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '0.875rem' }}><div style={{ width: '12px', height: '12px', borderRadius: '50%', background: 'var(--status-orange)'}}></div> {t('map.warning')}</span>
-            <span style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '0.875rem' }}><div style={{ width: '12px', height: '12px', borderRadius: '50%', background: 'var(--status-red)'}}></div> {t('map.critical')}</span>
+        
+        <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap', alignItems: 'center', background: 'rgba(255,255,255,0.03)', padding: '12px 20px', borderRadius: 'var(--radius-lg)', border: '1px solid var(--border-color)' }}>
+          {/* Status Filter */}
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+            <label style={{ fontSize: '0.65rem', fontWeight: '700', textTransform: 'uppercase', color: 'var(--text-secondary)', letterSpacing: '0.05em' }}>
+              {t('map.filterStatus')}
+            </label>
+            <select 
+              value={statusFilter} 
+              onChange={(e) => setStatusFilter(e.target.value)}
+              style={{ background: 'var(--bg-primary)', color: 'var(--text-primary)', border: '1px solid var(--border-color)', padding: '6px 12px', borderRadius: 'var(--radius-md)', fontSize: '0.875rem', cursor: 'pointer', outline: 'none' }}
+            >
+              <option value="all">{t('map.allStatuses')}</option>
+              <option value="green">{t('map.normal')}</option>
+              <option value="orange">{t('map.warning')}</option>
+              <option value="red">{t('map.critical')}</option>
+            </select>
+          </div>
+
+          {/* Type Filter */}
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+            <label style={{ fontSize: '0.65rem', fontWeight: '700', textTransform: 'uppercase', color: 'var(--text-secondary)', letterSpacing: '0.05em' }}>
+              {t('map.filterType')}
+            </label>
+            <select 
+              value={typeFilter} 
+              onChange={(e) => setTypeFilter(e.target.value)}
+              style={{ background: 'var(--bg-primary)', color: 'var(--text-primary)', border: '1px solid var(--border-color)', padding: '6px 12px', borderRadius: 'var(--radius-md)', fontSize: '0.875rem', cursor: 'pointer', outline: 'none' }}
+            >
+              <option value="all">{t('map.allTypes')}</option>
+              <option value="water">{t('types.water')}</option>
+              <option value="gas">{t('types.gas')}</option>
+              <option value="temp">{t('types.temp')}</option>
+              <option value="light">{t('types.light')}</option>
+              <option value="valve">{t('types.valve')}</option>
+            </select>
+          </div>
+
+          <div style={{ width: '1px', height: '30px', background: 'var(--border-color)', margin: '0 5px' }}></div>
+
+          <div style={{ display: 'flex', gap: '10px' }}>
+              <span style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '0.8rem' }}><div style={{ width: '8px', height: '8px', borderRadius: '50%', background: 'var(--status-green)'}}></div> {t('map.normal')}</span>
+              <span style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '0.8rem' }}><div style={{ width: '8px', height: '8px', borderRadius: '50%', background: 'var(--status-orange)'}}></div> {t('map.warning')}</span>
+              <span style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '0.8rem' }}><div style={{ width: '8px', height: '8px', borderRadius: '50%', background: 'var(--status-red)'}}></div> {t('map.critical')}</span>
+          </div>
         </div>
       </div>
 
@@ -88,7 +131,10 @@ export default function InteractiveMap() {
             url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
           />
           
-          {loading ? null : estates.map(estate => (
+          {loading ? null : estates
+            .filter(e => (statusFilter === 'all' || e.status === statusFilter))
+            .filter(e => (typeFilter === 'all' || e.type === typeFilter))
+            .map(estate => (
             <Marker 
               key={`est-${estate.id}`} 
               position={estate.position}
@@ -147,8 +193,10 @@ export default function InteractiveMap() {
             </Marker>
           ))}
 
-          {/* Individual Sensors (like Valves) */}
-          {loading ? null : fleet.map(device => (
+          {loading ? null : fleet
+            .filter(d => (statusFilter === 'all' || d.status === statusFilter))
+            .filter(d => (typeFilter === 'all' || d.type === typeFilter))
+            .map(device => (
             <Marker 
               key={`dev-${device.devEui}`} 
               position={device.position}
