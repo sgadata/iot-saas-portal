@@ -39,20 +39,12 @@ export default function Login() {
                 
                 <div style={{ zIndex: 1, animation: 'fadeIn 1s ease-out' }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '30px', marginBottom: '2.5rem' }}>
-                        {/* SGA DATA SVG LOGO OFFICIAL HIGR-RES */}
-                        <svg width="120" height="120" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ filter: 'drop-shadow(0 0 20px rgba(0, 229, 255, 0.3))' }}>
-                          <path d="M50 5L89.5 27.5V72.5L50 95L10.5 72.5V27.5L50 5Z" fill="url(#login_grad)" stroke="white" strokeWidth="1" strokeOpacity="0.2"/>
-                          <path d="M50 5L89.5 27.5V72.5L50 95L10.5 72.5V27.5L50 5Z" fill="url(#login_grad)" stroke="var(--accent-primary)" strokeWidth="3"/>
-                          <path d="M25 40L35 45M25 60L35 55M75 40L65 45M75 60L65 55" stroke="white" strokeWidth="3" strokeLinecap="round"/>
-                          <circle cx="50" cy="50" r="22" fill="white" fillOpacity="0.05" stroke="white" strokeOpacity="0.2" strokeWidth="1"/>
-                          <text x="50" y="60" fontFamily="Arial" fontSize="22" fontWeight="900" fill="white" textAnchor="middle" style={{ letterSpacing: '1px', textShadow: '0 2px 4px rgba(0,0,0,0.5)' }}>SGA</text>
-                          <defs>
-                            <linearGradient id="login_grad" x1="50" y1="5" x2="50" y2="95" gradientUnits="userSpaceOnUse">
-                              <stop stopColor="#00E5FF"/>
-                              <stop offset="1" stopColor="#007BFF"/>
-                            </linearGradient>
-                          </defs>
-                        </svg>
+                        <img 
+                          src="/logo.png" 
+                          alt="SGA Data Logo" 
+                          style={{ height: '140px', width: 'auto', objectFit: 'contain', borderRadius: '12px' }} 
+                          onError={(e) => { e.target.style.display = 'none'; }}
+                        />
                         <div style={{ display: 'flex', flexDirection: 'column' }}>
                             <h1 style={{ fontSize: '4rem', fontWeight: '900', color: 'white', letterSpacing: '-2px', lineHeight: '1', margin: 0 }}>SGA DATA</h1>
                             <span style={{ fontSize: '1.1rem', color: 'var(--accent-primary)', fontWeight: '700', textTransform: 'uppercase', letterSpacing: '0.15em', marginTop: '5px' }}>Data & Energy Consulting</span>
