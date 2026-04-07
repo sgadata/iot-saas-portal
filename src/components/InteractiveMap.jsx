@@ -7,6 +7,7 @@ import { DEVICE_SCHEMAS } from '../config/deviceSchemas';
 import ValvePopup from './map/popups/ValvePopup';
 import SensorPopup from './map/popups/SensorPopup';
 import GatewayPopup from './map/popups/GatewayPopup';
+import EstatePopup from './map/popups/EstatePopup';
 import 'leaflet/dist/leaflet.css';
 import L from 'leaflet';
 import { renderToString } from 'react-dom/server';
@@ -113,6 +114,11 @@ export default function InteractiveMap() {
    * RENDERIZADO DINÁMICO DE POPUPS (Arquitectura de Plantillas)
    */
   const renderPopupContent = (device) => {
+    // Caso 1: Es una Finca (Estate)
+    if (device.id && !device.devEui) {
+      return <EstatePopup estate={device} />;
+    }
+
     const schema = DEVICE_SCHEMAS[device.type] || DEVICE_SCHEMAS.default;
     
     if (schema.popupType === 'valve') {
@@ -224,6 +230,9 @@ export default function InteractiveMap() {
                     </div>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '0.7rem' }}>
                         <Sun size={14} color="var(--text-secondary)" /> {t('types.light')}
+                    </div>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '0.7rem' }}>
+                        <Building2 size={14} color="var(--accent-primary)" /> {t('dashboard.kpiEstates')}
                     </div>
                 </div>
             </div>
