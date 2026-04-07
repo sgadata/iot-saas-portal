@@ -101,7 +101,19 @@ export default function InteractiveMap() {
                      {t(`types.${estate.type}`)}
                   </p>
 
-                  <div style={{ padding: '8px', background: 'rgba(255,255,255,0.03)', borderRadius: '6px', fontSize: '0.75rem', marginBottom: '12px', border: '1px solid var(--border-color)', color: estate.status === 'green' ? 'var(--text-secondary)' : 'var(--text-primary)' }}>
+                  <div style={{ 
+                    padding: '10px', 
+                    background: estate.status === 'green' ? 'rgba(16, 185, 129, 0.1)' : estate.status === 'orange' ? 'rgba(245, 158, 11, 0.1)' : 'rgba(239, 68, 68, 0.1)', 
+                    borderRadius: '6px', 
+                    fontSize: '0.8rem', 
+                    marginBottom: '12px', 
+                    border: `1px solid ${estate.status === 'green' ? 'var(--status-green)' : estate.status === 'orange' ? 'var(--status-orange)' : 'var(--status-red)'}`,
+                    color: estate.status === 'green' ? 'var(--status-green)' : estate.status === 'orange' ? 'var(--status-orange)' : 'var(--status-red)',
+                    fontWeight: '600',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '8px'
+                  }}>
                     {estate.status === 'green' ? '✅ Todo Operativo' : `⚠️ ${estate.statusDetail || 'Requiere atención'}`}
                   </div>
 
@@ -153,9 +165,21 @@ export default function InteractiveMap() {
                     {t(`types.${device.type}`)} | EUI: {device.devEui.slice(-4)}
                   </p>
 
-                  <p style={{ padding: '8px', background: 'rgba(255,255,255,0.03)', borderRadius: '6px', fontSize: '0.75rem', marginBottom: '12px', border: '1px solid var(--border-color)', color: device.status === 'green' ? 'var(--text-secondary)' : 'var(--text-primary)' }}>
-                    {device.status === 'green' ? '✅ System OK' : `⚠️ ${device.statusDetail || 'Alert detected'}`}
-                  </p>
+                  <div style={{ 
+                    padding: '10px', 
+                    background: device.status === 'green' ? 'rgba(16, 185, 129, 0.1)' : device.status === 'orange' ? 'rgba(245, 158, 11, 0.1)' : 'rgba(239, 68, 68, 0.1)', 
+                    borderRadius: '6px', 
+                    fontSize: '0.8rem', 
+                    marginBottom: '12px', 
+                    border: `1px solid ${device.status === 'green' ? 'var(--status-green)' : device.status === 'orange' ? 'var(--status-orange)' : 'var(--status-red)'}`,
+                    color: device.status === 'green' ? 'var(--status-green)' : device.status === 'orange' ? 'var(--status-orange)' : 'var(--status-red)',
+                    fontWeight: '600',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '8px'
+                  }}>
+                    {device.status === 'green' ? '✅ OK' : `⚠️ ${device.statusDetail || 'Alert detected'}`}
+                  </div>
 
                   {device.type === 'valve' && (
                     <div style={{ background: 'rgba(255,255,255,0.03)', padding: '10px', borderRadius: '8px', display: 'flex', flexDirection: 'column', gap: '8px' }}>
