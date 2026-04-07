@@ -3,6 +3,7 @@ import { Outlet, Link, useLocation } from 'react-router-dom';
 import { LayoutDashboard, Map, Activity, Settings, Bell, LogOut, Globe, PlusSquare, Menu, X, ShieldCheck, ClipboardList, PenTool } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '../context/AuthContext';
+import { apiClient } from '../services/apiClient';
 
 
 const Logo = ({ size = 45 }) => (
@@ -44,6 +45,29 @@ export default function Layout() {
     { key: 'auditLogs', path: '/audit', icon: <ClipboardList size={20} />, roles: ['admin'] },
     { key: 'settings', path: '/settings', icon: <Settings size={20} />, roles: ['admin'] },
   ].filter(item => item.roles.includes(user?.role || ''));
+
+  const [notifications, setNotifications] = useState([]);
+  const [isNotificationsOpen, setIsNotificationsOpen] = useState(false);
+
+  useEffect(() => {
+    const loadNotifications = async () => {
+      // Simulamos que las notificaciones vienen de las alertas críticas actuales
+      const fleet = await apiClient.getDeviceFleet();
+      const alerts = fleet.filter(d => d.status !== 'green').map(d => ({
+        id: d.devEui,
+        title: d.name,
+        msg: d.statusDetail,
+        time: d.lastSeen,
+        severity: d.status
+      }));
+      setNotifications(alerts);
+    };
+    loadNotifications();
+  }, []);
+
+  const handleMarkAsRead = (id) => {
+    setNotifications(prev => prev.filter(n => n.id !== id));
+  };
 
   return (
     <div className="app-container">
@@ -169,10 +193,92 @@ export default function Layout() {
                </button>
              </div>
 
-             <button style={{ background: 'transparent', border: 'none', color: 'var(--text-secondary)', cursor: 'pointer', position: 'relative' }}>
-                <Bell size={20} />
-                <span style={{ position: 'absolute', top: '-2px', right: '-2px', width: '8px', height: '8px', background: 'var(--status-red)', borderRadius: '50%' }}></span>
-             </button>
+             <div style={{ position: 'relative' }}>
+               <button 
+                  onClick={() => setIsNotificationsOpen(!isNotificationsOpen)}
+                  style={{ background: 'transparent', border: 'none', color: 'var(--text-secondary)', cursor: 'pointer', position: 'relative', display: 'flex', alignItems: 'center' }}
+                  id="notif-bell-btn"
+               >
+                  <Bell size={20} />
+                  {notifications.length > 0 && (
+                    <span style={{ position: 'absolute', top: '-4px', right: '-4px', width: '10px', height: '10px', background: 'var(--status-red)', borderRadius: '50%', border: '2px solid var(--bg-secondary)' }}></span>
+                  )}
+               </button>
+
+               {/* Notifications Dropdown */}
+               {isNotificationsOpen && (
+                 <div style={{ 
+                    position: 'absolute', 
+                    top: '40px', 
+                    right: '-10px', 
+                    width: '320px', 
+                    background: 'var(--bg-secondary)', 
+                    border: '1px solid var(--border-color)', 
+                    borderRadius: 'var(--radius-lg)', 
+                    boxShadow: 'var(--shadow-card)',
+                    zIndex: 1001,
+                    overflow: 'hidden',
+                    animation: 'fadeIn 0.2s ease-out'
+                 }}>
+                   <div style={{ padding: '12px 16px', borderBottom: '1px solid var(--border-color)', display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: 'rgba(255,255,255,0.02)' }}>
+                     <h4 style={{ margin: 0, fontSize: '0.875rem', fontWeight: '700' }}>{t('dashboard.alerts')}</h4>
+                     <span style={{ fontSize: '0.7rem', color: 'var(--text-secondary)', background: 'rgba(255,255,255,0.05)', padding: '2px 8px', borderRadius: '10px' }}>{notifications.length} {t('common.pending')}</span>
+                   </div>
+                   <div style={{ maxHeight: '350px', overflowY: 'auto' }}>
+                     {notifications.length === 0 ? (
+                       <div style={{ padding: '30px 20px', textAlign: 'center', color: 'var(--text-secondary)', fontSize: '0.875rem' }}>
+                         <div style={{ fontSize: '1.5rem', marginBottom: '10px' }}>🎉</div>
+                         {t('common.noAlerts')}
+                       </div>
+                     ) : (
+                       notifications.map(n => (
+                         <div 
+                           key={n.id} 
+                           style={{ 
+                             padding: '12px 16px', 
+                             borderBottom: '1px solid rgba(255,255,255,0.05)', 
+                             display: 'flex', 
+                             flexDirection: 'column', 
+                             gap: '4px',
+                             transition: 'background 0.2s',
+                             cursor: 'default'
+                           }}
+                           onMouseOver={(e) => e.currentTarget.style.background = 'rgba(255,255,255,0.02)'}
+                           onMouseOut={(e) => e.currentTarget.style.background = 'transparent'}
+                         >
+                           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+                             <span style={{ fontSize: '0.825rem', fontWeight: '700', color: n.severity === 'red' ? 'var(--status-red)' : 'var(--status-orange)' }}>
+                               {n.severity === 'red' ? '🔴' : '🟠'} {n.title}
+                             </span>
+                             <button 
+                               onClick={(e) => { e.stopPropagation(); handleMarkAsRead(n.id); }} 
+                               style={{ background: 'transparent', border: 'none', color: 'var(--text-secondary)', cursor: 'pointer', fontSize: '0.75rem', padding: '2px' }}
+                               title="Archive"
+                             >
+                               ✕
+                             </button>
+                           </div>
+                           <p style={{ margin: 0, fontSize: '0.75rem', color: 'var(--text-primary)', lineHeight: '1.4' }}>{n.msg}</p>
+                           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '4px' }}>
+                             <span style={{ fontSize: '0.65rem', color: 'var(--text-secondary)' }}>🕒 {n.time}</span>
+                             <Link to={`/telemetry/${n.id}`} onClick={() => setIsNotificationsOpen(false)} style={{ fontSize: '0.65rem', color: 'var(--accent-primary)', textDecoration: 'none', fontWeight: '600' }}>
+                               Ver más →
+                             </Link>
+                           </div>
+                         </div>
+                       ))
+                     )}
+                   </div>
+                   {notifications.length > 0 && (
+                     <div style={{ padding: '10px', textAlign: 'center', borderTop: '1px solid var(--border-color)', background: 'rgba(255,255,255,0.01)' }}>
+                       <button onClick={() => setNotifications([])} style={{ background: 'transparent', border: 'none', color: 'var(--accent-primary)', fontSize: '0.75rem', fontWeight: '600', cursor: 'pointer' }}>
+                         {t('common.clearAll')}
+                       </button>
+                     </div>
+                   )}
+                 </div>
+               )}
+             </div>
              <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
                 <div style={{ width: '36px', height: '36px', borderRadius: '50%', background: 'var(--bg-card)', border: '1px solid var(--border-color)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.875rem' }}>
                   {user?.name?.charAt(0) || 'A'}
