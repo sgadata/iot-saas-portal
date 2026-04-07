@@ -101,6 +101,10 @@ export default function InteractiveMap() {
                      {t(`types.${estate.type}`)}
                   </p>
 
+                  <div style={{ padding: '8px', background: 'rgba(255,255,255,0.03)', borderRadius: '6px', fontSize: '0.75rem', marginBottom: '12px', border: '1px solid var(--border-color)', color: estate.status === 'green' ? 'var(--text-secondary)' : 'var(--text-primary)' }}>
+                    {estate.status === 'green' ? '✅ Todo Operativo' : `⚠️ ${estate.statusDetail || 'Requiere atención'}`}
+                  </div>
+
                   {estate.type === 'valve' && (
                     <div style={{ background: 'rgba(59, 130, 246, 0.05)', padding: '10px', borderRadius: '8px', marginBottom: '10px', display: 'flex', flexDirection: 'column', gap: '8px', border: '1px solid rgba(59, 130, 246, 0.2)' }}>
                       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px' }}>
@@ -147,6 +151,10 @@ export default function InteractiveMap() {
                   
                   <p style={{ margin: '0 0 12px 0', fontSize: '0.825rem', color: 'var(--text-secondary)' }}>
                     {t(`types.${device.type}`)} | EUI: {device.devEui.slice(-4)}
+                  </p>
+
+                  <p style={{ padding: '8px', background: 'rgba(255,255,255,0.03)', borderRadius: '6px', fontSize: '0.75rem', marginBottom: '12px', border: '1px solid var(--border-color)', color: device.status === 'green' ? 'var(--text-secondary)' : 'var(--text-primary)' }}>
+                    {device.status === 'green' ? '✅ System OK' : `⚠️ ${device.statusDetail || 'Alert detected'}`}
                   </p>
 
                   {device.type === 'valve' && (
