@@ -5,17 +5,13 @@ Bienvenido a la guía oficial de la plataforma de **Consultoría de Datos y Ener
 ---
 
 ## 1. 📂 Visión General (Dashboard)
-Es el "centro de mando" donde se monitoriza el estado global de todas las fincas.
+Es el "centro de mando" donde se monitoriza el estado global de todas las fincas con **coherencia total de datos**.
 
-*   **Tarjetas KPI Interactivas:**
-    *   **Total Fincas (14):** Muestra el número total de instalaciones. *Acción:* Al hacer click, te lleva al Mapa filtrado por todas las fincas.
-    *   **Sensores Activos (342):** Refleja la flota total de dispositivos LoRaWAN. *Acción:* Al hacer click, abre el Explorador de Flota.
-    *   **Alertas Críticas:** Contador de dispositivos en estado 'Rojo'. *Acción:* Al hacer click, abre el Mapa filtrado **solo** por alertas críticas.
-*   **Alertas Recientes:** Lista de los últimos 2 eventos detectados. Cada alerta es clickable y te redirige al sensor exacto en el mapa.
-*   **Acciones Rápidas:**
-    *   **Ver Mapa:** Salto directo a la cartografía.
-    *   **Diagnóstico:** Acceso rápido a las gráficas del sensor principal.
-*   **Exportar Reporte (Botón 📊):** Genera un informe CSV instantáneo con la telemetría del último mes.
+*   **Tarjetas KPI Dinámicas (Sincronizadas):**
+    *   **Total Fincas (14):** Muestra todas las instalaciones registradas en el sistema. Al hacer click, verás las 14 en el mapa.
+    *   **Sensores Activos (342):** Refleja la flota real completa. Al hacer click, te lleva al Explorador de Flota con los 342 dispositivos.
+    *   **Alertas Críticas:** Contador dinámico basado en estados 'Rojo' actuales.
+*   **Alertas Recientes con DNA:** Cada alerta conoce su tipo (Agua, Gas, etc.). Al hacer click, el mapa se abrirá filtrando **automáticamente** por ese tipo y estado.
 
 ---
 
@@ -23,28 +19,41 @@ Es el "centro de mando" donde se monitoriza el estado global de todas las fincas
 Representación geográfica de todos los activos de SGA DATA.
 
 *   **Puntos de Mapa (Markers):**
-    *   🟢 **Verde:** Operativo y sin alarmas.
-    *   🟠 **Naranja (Warning):** Requiere atención rápida (ej: batería baja).
-    *   🔴 **Rojo (Critical):** Alerta activa (ej: fuga o fallo de sensor).
-    *   🔵 **Azul:** Representación de dispositivos tipo Válvula.
-*   **Popups de Acción (Al pulsar un punto):**
-    *   **Acciones de Válvula:** Botones de "Abrir", "Cerrar" y "Temporizador (30 min)".
-    *   **Acciones Técnicas:** "Resetear Contador", "Test de Fuga", "Test de Alarma" (según el tipo de sensor).
-    *   **Ver Telemetría:** Enlace directo a las gráficas del sensor.
-*   **Filtros Avanzados:** Selectores superiores para filtrar por **Estado** (Normal/Warning/Crítico) y **Tipo de Sensor** (Agua, Gas, Temperatura, Luz, Válvula).
+    *   🟢 **Verde:** Operativo.
+    *   🟠 **Naranja (Warning):** Requiere atención (ej: batería baja).
+    *   🔴 **Rojo (Critical):** Alerta activa (ej: fuga o fallo).
+    *   🔵 **Azul:** Válvulas inteligentes.
+*   **Popups de Acción:** Control de válvulas, resets, tests de fuga y acceso a telemetría.
+*   **Filtros Inteligentes:** Selectores superiores para filtrar por Estado y Tipo de Sensor de forma simultánea.
 
 ---
 
 ## 3. ⚡ Análisis de Energía (SGA Analytics) 💎
 Módulo premium de consultoría energética.
 
-*   **KPIs de Sostenibilidad:**
-    *   **Ahorro Mensual (€):** Dinero ahorrado gracias a la optimización.
-    *   **Huella de Carbono (kg CO2):** Reducción de emisiones vs. línea base.
-    *   **Coste Previsto:** Proyección del gasto energético para el final del mes.
-*   **Gráfico de Eficiencia:** Comparativa visual entre el consumo real y el baseline teórico.
-*   **SGA Insights:** Recomendaciones automáticas del sistema para detectar mantenimientos o ahorros ocultos.
-*   **Download Full Energy Audit:** Botón para generar la auditoría completa en formato profesional.
+*   **KPIs de Sostenibilidad:** Ahorro Mensual (€), Huella de Carbono (kg CO2) y Coste Previsto.
+*   **SGA Insights:** Recomendaciones automáticas para la optimización del consumo.
+
+---
+
+## 4. 🚀 Explorador de Flota (Fleet Explorer)
+Buscador avanzado para gestionar los **342 sensores** de la red.
+
+*   **Contador Global:** Indica en tiempo real cuántos sensores hay detectados en total.
+*   **Filtros por Atributo:** Búsqueda por DevEUI, Nombre, Comunidad o Tipo de Sensor.
+
+---
+
+## 5. 🤖 Motor de Reglas (Alert Rules)
+Inteligencia automatizada para monitorizar la flota 24/7.
+
+*   **Crear Regla:**
+    *   **Selector de Sensor:** Permite elegir si la regla aplica a Agua, Gas, Temperatura, etc.
+    *   **Condiciones Traducidas:** Configuración bilingüe (Mayor que, Menor que, Igual a).
+    *   **Gravedad:** Warning o Crítico con colores distintivos.
+    *   **Iconografía Dinámica:** Cada regla muestra el icono del tipo de sensor asignado para una identificación rápida.
+*   **Canales y Acciones:** Notificaciones por Email/Telegram y comandos automáticos (ej: cerrar válvula).
+*   **Interfaz mejorada:** Botón de "Cancelar" claro para cerrar el formulario sin guardar cambios.
 
 ---
 
