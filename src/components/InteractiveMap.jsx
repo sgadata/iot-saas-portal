@@ -16,6 +16,14 @@ let DefaultIcon = L.icon({
     iconSize: [25, 41],
     iconAnchor: [12, 41]
 });
+
+let ValveIcon = L.icon({
+    iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-blue.png',
+    shadowUrl: iconShadow,
+    iconSize: [25, 41],
+    iconAnchor: [12, 41]
+});
+
 L.Marker.prototype.options.icon = DefaultIcon;
 
 export default function InteractiveMap() {
@@ -74,13 +82,37 @@ export default function InteractiveMap() {
           />
           
           {loading ? null : estates.map(estate => (
-            <Marker key={`est-${estate.id}`} position={estate.position}>
+            <Marker 
+              key={`est-${estate.id}`} 
+              position={estate.position}
+              icon={estate.type === 'valve' ? ValveIcon : DefaultIcon}
+            >
               <Popup>
                 <div style={{ padding: '4px', minWidth: '150px' }}>
                   <h4 style={{ margin: '0 0 5px 0', fontSize: '1rem' }}>{estate.name}</h4>
                   <p style={{ margin: '0 0 10px 0', fontSize: '0.875rem', fontWeight: '500', color: 'var(--text-secondary)' }}>
                      {t(`types.${estate.type}`)}
                   </p>
+
+                  {estate.type === 'valve' && (
+                    <div style={{ background: 'rgba(59, 130, 246, 0.05)', padding: '10px', borderRadius: '8px', marginBottom: '10px', display: 'flex', flexDirection: 'column', gap: '8px', border: '1px solid rgba(59, 130, 246, 0.2)' }}>
+                      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px' }}>
+                        <button 
+                          onClick={(e) => { e.stopPropagation(); handleCommand(estate.id, 'OPEN'); }}
+                          style={{ background: 'var(--status-green)', color: 'white', border: 'none', padding: '6px', borderRadius: '4px', cursor: 'pointer', fontSize: '0.7rem', fontWeight: 'bold' }}
+                        >
+                          {t('telemetry.btn_open')}
+                        </button>
+                        <button 
+                          onClick={(e) => { e.stopPropagation(); handleCommand(estate.id, 'CLOSE'); }}
+                          style={{ background: 'var(--status-red)', color: 'white', border: 'none', padding: '6px', borderRadius: '4px', cursor: 'pointer', fontSize: '0.7rem', fontWeight: 'bold' }}
+                        >
+                          {t('telemetry.btn_close')}
+                        </button>
+                      </div>
+                    </div>
+                  )}
+
                   <button 
                     onClick={() => navigate(`/telemetry/${estate.id}`)}
                     style={{ background: 'var(--accent-primary)', color: 'white', border: 'none', padding: '6px 12px', borderRadius: '4px', cursor: 'pointer', width: '100%' }}
@@ -94,7 +126,11 @@ export default function InteractiveMap() {
 
           {/* Individual Sensors (like Valves) */}
           {loading ? null : fleet.map(device => (
-            <Marker key={`dev-${device.devEui}`} position={device.position}>
+            <Marker 
+              key={`dev-${device.devEui}`} 
+              position={device.position}
+              icon={device.type === 'valve' ? ValveIcon : DefaultIcon}
+            >
               <Popup>
                 <div style={{ padding: '4px', minWidth: '200px' }}>
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
