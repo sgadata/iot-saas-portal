@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { ShieldCheck, Plus, Trash2, Bell, Zap, Thermometer, Battery, X } from 'lucide-react';
+import { ShieldCheck, Plus, Trash2, Bell, Zap, Thermometer, Battery, X, Mail, MessageSquare, Play } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { apiClient } from '../services/apiClient';
 
@@ -8,7 +8,15 @@ export default function AlertRules() {
   const [rules, setRules] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showModal, setShowModal] = useState(false);
-  const [newRule, setNewRule] = useState({ name: '', sensorType: 'temp', condition: '>', threshold: 30, severity: 'warning' });
+  const [newRule, setNewRule] = useState({ 
+    name: '', 
+    sensorType: 'temp', 
+    condition: '>', 
+    threshold: 30, 
+    severity: 'warning',
+    channels: { email: false, telegram: false },
+    action: 'none'
+  });
 
   useEffect(() => {
     async function loadRules() {
@@ -28,7 +36,15 @@ export default function AlertRules() {
       const ruleToAdd = { ...newRule, id: rules.length + 1, active: true };
       setRules([ruleToAdd, ...rules]);
       setShowModal(false);
-      setNewRule({ name: '', sensorType: 'temp', condition: '>', threshold: 30, severity: 'warning' });
+      setNewRule({ 
+        name: '', 
+        sensorType: 'temp', 
+        condition: '>', 
+        threshold: 30, 
+        severity: 'warning',
+        channels: { email: false, telegram: false },
+        action: 'none'
+      });
   };
 
   const toggleRule = (id) => {
@@ -53,15 +69,15 @@ export default function AlertRules() {
         {loading ? (
           <div>{t('admin.loading')}</div>
         ) : rules.map(rule => (
-          <div key={rule.id} className="card" style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem', opacity: rule.active ? 1 : 0.6 }}>
+          <div key={rule.id} className="card" style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem', opacity: rule.active ? 1 : 0.6, position: 'relative' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
                 <div style={{ padding: '10px', background: 'rgba(255,255,255,0.03)', borderRadius: '12px', border: '1px solid var(--border-color)' }}>
                   {rule.sensorType === 'temp' ? <Thermometer size={20} color="var(--accent-primary)" /> : <Zap size={20} color="var(--status-orange)" />}
                 </div>
                 <div>
-                  <h4 style={{ fontSize: '1.1rem', fontWeight: '600' }}>{rule.name}</h4>
-                  <span style={{ fontSize: '0.75rem', color: 'var(--text-secondary)', textTransform: 'uppercase' }}>{t('telemetry.type')}: {rule.sensorType}</span>
+                  <h4 style={{ fontSize: '1.1rem', fontWeight: '600', margin: 0 }}>{rule.name}</h4>
+                  <span style={{ fontSize: '0.75rem', color: 'var(--text-secondary)', textTransform: 'uppercase' }}>{rule.sensorType}</span>
                 </div>
               </div>
               <div style={{ padding: '4px 10px', borderRadius: '20px', fontSize: '0.7rem', fontWeight: '700', background: getSeverityColor(rule.severity), color: 'white', textTransform: 'uppercase' }}>
@@ -70,9 +86,20 @@ export default function AlertRules() {
             </div>
 
             <div style={{ background: 'var(--bg-primary)', padding: '15px', borderRadius: '8px', borderLeft: `4px solid ${getSeverityColor(rule.severity)}` }}>
-               <p style={{ fontSize: '0.9rem', color: 'var(--text-primary)' }}>
-                 {t('admin.triggerWhen')} <strong>{t('admin.value')} {rule.condition} {rule.threshold}</strong>
+               <p style={{ fontSize: '0.9rem', color: 'var(--text-primary)', margin: 0 }}>
+                 {t('admin.triggerWhen')} <strong>{rule.condition} {rule.threshold}</strong>
                </p>
+            </div>
+
+            {/* Rule Features Badge */}
+            <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
+               {rule.channels?.email && <div style={{ display: 'flex', alignItems: 'center', gap: '4px', fontSize: '0.65rem', background: 'rgba(255,255,255,0.05)', padding: '2px 8px', borderRadius: '4px', color: 'var(--text-secondary)' }}><Mail size={12} /> Email</div>}
+               {rule.channels?.telegram && <div style={{ display: 'flex', alignItems: 'center', gap: '4px', fontSize: '0.65rem', background: 'rgba(255,255,255,0.05)', padding: '2px 8px', borderRadius: '4px', color: 'var(--text-secondary)' }}><MessageSquare size={12} /> Telegram</div>}
+               {rule.action && rule.action !== 'none' && (
+                 <div style={{ display: 'flex', alignItems: 'center', gap: '4px', fontSize: '0.65rem', background: 'rgba(59, 130, 246, 0.1)', padding: '2px 8px', borderRadius: '4px', color: 'var(--accent-primary)', fontWeight: '700' }}>
+                   <Play size={12} /> {t(`admin.action${rule.action.charAt(0).toUpperCase() + rule.action.slice(1)}`)}
+                 </div>
+               )}
             </div>
 
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: 'auto', paddingTop: '1rem', borderTop: '1px solid var(--border-color)' }}>
@@ -96,67 +123,75 @@ export default function AlertRules() {
 
       {/* CREATE RULE MODAL */}
       {showModal && (
-          <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.8)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1000, padding: '1rem' }}>
-              <div className="card" style={{ width: '100%', maxWidth: '500px', animation: 'scale-up 0.3s' }}>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
-                      <h3 style={{ fontSize: '1.25rem' }}>{t('admin.createRuleBtn')}</h3>
+          <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.85)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1000, padding: '1rem', backdropFilter: 'blur(4px)' }}>
+              <div className="card" style={{ width: '100%', maxWidth: '550px', animation: 'scale-up 0.2s ease-out', padding: '2rem' }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2rem' }}>
+                      <h3 style={{ fontSize: '1.5rem', fontWeight: '800', margin: 0 }}>{t('admin.createRuleBtn')}</h3>
                       <button onClick={() => setShowModal(false)} style={{ background: 'transparent', border: 'none', color: 'var(--text-secondary)', cursor: 'pointer' }}>
                           <X size={24} />
                       </button>
                   </div>
 
-                  <form onSubmit={handleCreateRule} style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
-                      <div>
-                          <label style={{ display: 'block', fontSize: '0.875rem', marginBottom: '8px' }}>{t('admin.ruleName')}</label>
-                          <input 
-                            required 
-                            type="text" 
-                            className="input-field" 
-                            value={newRule.name} 
-                            onChange={e => setNewRule({...newRule, name: e.target.value})} 
-                            style={{ width: '100%', padding: '10px', background: 'var(--bg-primary)', border: '1px solid var(--border-color)', borderRadius: '6px', color: 'white' }}
-                          />
-                      </div>
-                      
-                      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
+                  <form onSubmit={handleCreateRule} style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
+                      <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr', gap: '1.25rem' }}>
                         <div>
-                            <label style={{ display: 'block', fontSize: '0.875rem', marginBottom: '8px' }}>{t('admin.condition')}</label>
-                            <select 
-                                value={newRule.condition} 
-                                onChange={e => setNewRule({...newRule, condition: e.target.value})} 
-                                style={{ width: '100%', padding: '10px', background: 'var(--bg-primary)', border: '1px solid var(--border-color)', borderRadius: '6px', color: 'white' }}
-                            >
+                            <label style={{ display: 'block', fontSize: '0.75rem', fontWeight: '700', marginBottom: '8px', textTransform: 'uppercase', color: 'var(--text-secondary)' }}>{t('admin.ruleName')}</label>
+                            <input required type="text" value={newRule.name} onChange={e => setNewRule({...newRule, name: e.target.value})} style={{ width: '100%', padding: '12px', background: 'var(--bg-primary)', border: '1px solid var(--border-color)', borderRadius: '8px', color: 'white', outline: 'none' }} placeholder="Ex: High Temp Alert" />
+                        </div>
+                        <div>
+                            <label style={{ display: 'block', fontSize: '0.75rem', fontWeight: '700', marginBottom: '8px', textTransform: 'uppercase', color: 'var(--text-secondary)' }}>{t('admin.severity')}</label>
+                            <select value={newRule.severity} onChange={e => setNewRule({...newRule, severity: e.target.value})} style={{ width: '100%', padding: '12px', background: 'var(--bg-primary)', border: '1px solid var(--border-color)', borderRadius: '8px', color: 'white', outline: 'none' }}>
+                                <option value="warning">Warning</option>
+                                <option value="critical">Critical</option>
+                            </select>
+                        </div>
+                      </div>
+
+                      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.25rem' }}>
+                        <div>
+                            <label style={{ display: 'block', fontSize: '0.75rem', fontWeight: '700', marginBottom: '8px', textTransform: 'uppercase', color: 'var(--text-secondary)' }}>{t('admin.condition')}</label>
+                            <select value={newRule.condition} onChange={e => setNewRule({...newRule, condition: e.target.value})} style={{ width: '100%', padding: '12px', background: 'var(--bg-primary)', border: '1px solid var(--border-color)', borderRadius: '8px', color: 'white' }}>
                                 <option value=">">Grater than ({'>'})</option>
                                 <option value="<">Less than ({'<'})</option>
                                 <option value="=">Equals (=)</option>
                             </select>
                         </div>
                         <div>
-                            <label style={{ display: 'block', fontSize: '0.875rem', marginBottom: '8px' }}>{t('admin.threshold')}</label>
-                            <input 
-                                required 
-                                type="number" 
-                                value={newRule.threshold} 
-                                onChange={e => setNewRule({...newRule, threshold: e.target.value})} 
-                                style={{ width: '100%', padding: '10px', background: 'var(--bg-primary)', border: '1px solid var(--border-color)', borderRadius: '6px', color: 'white' }}
-                            />
+                            <label style={{ display: 'block', fontSize: '0.75rem', fontWeight: '700', marginBottom: '8px', textTransform: 'uppercase', color: 'var(--text-secondary)' }}>{t('admin.threshold')}</label>
+                            <input required type="number" value={newRule.threshold} onChange={e => setNewRule({...newRule, threshold: e.target.value})} style={{ width: '100%', padding: '12px', background: 'var(--bg-primary)', border: '1px solid var(--border-color)', borderRadius: '8px', color: 'white' }} />
                         </div>
                       </div>
 
-                      <div>
-                          <label style={{ display: 'block', fontSize: '0.875rem', marginBottom: '8px' }}>{t('admin.severity')}</label>
-                          <div style={{ display: 'flex', gap: '1rem' }}>
-                              <label style={{ display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer' }}>
-                                  <input type="radio" checked={newRule.severity === 'warning'} onChange={() => setNewRule({...newRule, severity: 'warning'})} /> Warning
-                              </label>
-                              <label style={{ display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer' }}>
-                                  <input type="radio" checked={newRule.severity === 'critical'} onChange={() => setNewRule({...newRule, severity: 'critical'})} /> Critical
-                              </label>
-                          </div>
+                      {/* Phase 3: Channels */}
+                      <div style={{ padding: '15px', background: 'rgba(255,255,255,0.02)', borderRadius: '12px', border: '1px solid var(--border-color)' }}>
+                        <label style={{ display: 'block', fontSize: '0.75rem', fontWeight: '700', marginBottom: '12px', textTransform: 'uppercase', color: 'var(--accent-primary)' }}>{t('admin.notificationChannels')}</label>
+                        <div style={{ display: 'flex', gap: '20px' }}>
+                          <label style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '0.9rem', cursor: 'pointer' }}>
+                            <input type="checkbox" checked={newRule.channels.email} onChange={e => setNewRule({...newRule, channels: {...newRule.channels, email: e.target.checked}})} /> {t('admin.channelEmail')}
+                          </label>
+                          <label style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '0.9rem', cursor: 'pointer' }}>
+                            <input type="checkbox" checked={newRule.channels.telegram} onChange={e => setNewRule({...newRule, channels: {...newRule.channels, telegram: e.target.checked}})} /> {t('admin.channelTelegram')}
+                          </label>
+                        </div>
                       </div>
 
-                      <button type="submit" style={{ background: 'var(--accent-primary)', color: 'white', padding: '12px', borderRadius: 'var(--radius-md)', border: 'none', fontWeight: '700', cursor: 'pointer', marginTop: '1rem' }}>
-                          Save Intelligent Rule
+                      {/* Phase 4: Automated Action */}
+                      <div style={{ padding: '15px', background: 'rgba(59, 130, 246, 0.05)', borderRadius: '12px', border: '1px solid rgba(59, 130, 246, 0.2)' }}>
+                        <label style={{ display: 'block', fontSize: '0.75rem', fontWeight: '700', marginBottom: '8px', textTransform: 'uppercase', color: 'var(--accent-primary)' }}>{t('admin.automatedAction')}</label>
+                        <select 
+                          value={newRule.action} 
+                          onChange={e => setNewRule({...newRule, action: e.target.value})}
+                          style={{ width: '100%', padding: '10px', background: 'var(--bg-primary)', border: '1px solid var(--border-color)', borderRadius: '6px', color: 'white', outline: 'none' }}
+                        >
+                          <option value="none">{t('admin.noAction')}</option>
+                          <option value="CloseValve">{t('admin.actionCloseValve')}</option>
+                          <option value="Reset">{t('admin.actionReset')}</option>
+                          <option value="Sync">{t('admin.actionSync')}</option>
+                        </select>
+                      </div>
+
+                      <button type="submit" style={{ background: 'var(--accent-primary)', color: 'white', padding: '14px', borderRadius: 'var(--radius-md)', border: 'none', fontWeight: '800', cursor: 'pointer', marginTop: '0.5rem', fontSize: '1rem' }}>
+                          {t('admin.createRuleBtn')}
                       </button>
                   </form>
               </div>

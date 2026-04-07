@@ -121,7 +121,15 @@ const resources = {
         "colStatus": "Status",
         "colActions": "Actions",
         "denied": "Access Denied",
-        "deniedSub": "You do not have corporate permissions to access this Console."
+        "deniedSub": "You do not have corporate permissions to access this Console.",
+        "inviteTitle": "Invite New Team Member",
+        "inviteSub": "Send an automated invitation to a new technical or administrative collaborator.",
+        "formName": "Full Name",
+        "formEmail": "Corporate Email",
+        "formRole": "Assigned Role",
+        "roleAdmin": "SGA Administrator",
+        "roleTech": "Field Technician",
+        "sendInvite": "Send Invitation"
       },
       "provisioning": {
         "title": "Install New Sensor",
@@ -172,7 +180,34 @@ const resources = {
         "brandingSubtitle": "Corporate Color Scheme",
         "brandingLogo": "Dashboard Logo",
         "noLogo": "No logo uploaded",
-        "changeLogo": "Change Logo"
+        "changeLogo": "Change Logo",
+        "notificationChannels": "Notification Channels",
+        "channelEmail": "Email Alert",
+        "channelTelegram": "Telegram Bot",
+        "automatedAction": "Automated Action",
+        "noAction": "No action (Alert only)",
+        "actionCloseValve": "Close Main Valve",
+        "actionReset": "Reset Sensor Counter",
+        "actionSync": "Force Network Sync"
+      },
+      "energy": {
+        "title": "Energy Consulting",
+        "subtitle": "Efficiency analytics and sustainability insights by SGA Data.",
+        "kpiSavings": "Estimated Savings",
+        "kpiCarbon": "Carbon Offset",
+        "kpiForecast": "Forecasted Cost",
+        "efficiencyScore": "Efficiency Score",
+        "recommendations": "SGA Insights",
+        "reductionTip": "Shift high consumption to off-peak hours (14:00-16:00).",
+        "maintenanceTip": "Anomaly detected in Valve 4; schedule maintenance to avoid waste.",
+        "energyUnit": "kWh",
+        "carbonUnit": "kg CO2",
+        "costUnit": "€"
+      },
+      "common": {
+        "pending": "Pending",
+        "clearAll": "Clear All",
+        "noAlerts": "No alerts detected"
       }
     }
   },
@@ -293,7 +328,15 @@ const resources = {
         "colStatus": "Estado",
         "colActions": "Acciones",
         "denied": "Acceso Denegado",
-        "deniedSub": "No tienes los permisos corporativos para acceder a esta Consola."
+        "deniedSub": "No tienes los permisos corporativos para acceder a esta Consola.",
+        "inviteTitle": "Invitar a Nuevo Miembro",
+        "inviteSub": "Envía una invitación automática a un nuevo colaborador técnico o administrativo.",
+        "formName": "Nombre Completo",
+        "formEmail": "Email Corporativo",
+        "formRole": "Rol Asignado",
+        "roleAdmin": "Administrador SGA",
+        "roleTech": "Técnico de Campo",
+        "sendInvite": "Enviar Invitación"
       },
       "provisioning": {
         "title": "Instalar Nuevo Sensor",
@@ -344,7 +387,34 @@ const resources = {
         "brandingSubtitle": "Esquema de Color Corporativo",
         "brandingLogo": "Logo del Dashboard",
         "noLogo": "Sin logo cargado",
-        "changeLogo": "Cambiar Logo"
+        "changeLogo": "Cambiar Logo",
+        "notificationChannels": "Canales de Notificación",
+        "channelEmail": "Alerta por Email",
+        "channelTelegram": "Bot de Telegram",
+        "automatedAction": "Acción Automatizada",
+        "noAction": "Sin acción (Solo alerta)",
+        "actionCloseValve": "Cerrar Válvula Principal",
+        "actionReset": "Resetear Contador",
+        "actionSync": "Forzar Sincronización"
+      },
+      "energy": {
+        "title": "Consultoría Energética",
+        "subtitle": "Analítica de eficiencia y sostenibilidad por SGA Data.",
+        "kpiSavings": "Ahorro Estimado",
+        "kpiCarbon": "Huella Carbono",
+        "kpiForecast": "Coste Previsto",
+        "efficiencyScore": "Índice de Eficiencia",
+        "recommendations": "SGA Insights",
+        "reductionTip": "Mover consumo alto a horas valle (14:00-16:00).",
+        "maintenanceTip": "Anomalía en Válvula 4; programar mantenimiento para evitar desperdicio.",
+        "energyUnit": "kWh",
+        "carbonUnit": "kg CO2",
+        "costUnit": "€"
+      },
+      "common": {
+        "pending": "Pendiente",
+        "clearAll": "Limpiar todo",
+        "noAlerts": "No se detectan alertas"
       }
     }
   }

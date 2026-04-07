@@ -181,5 +181,38 @@ export const apiClient = {
       DATA_CACHE.branding = { ...DATA_CACHE.branding, ...newBranding };
       return { success: true };
     }
+  },
+
+  // User & Tenant Management Mock
+  getUsers: async () => {
+    await delay(600);
+    return [
+      { id: 1, name: 'Sebastian A.', email: 'admin@sga.com', role: 'admin', status: 'active' },
+      { id: 2, name: 'Tecnico Campo', email: 'tecnico@sga.com', role: 'tecnico', status: 'active' },
+      { id: 3, name: 'Consultor Junior', email: 'junior@sga.com', role: 'tecnico', status: 'pending' },
+    ];
+  },
+
+  // Energy Analytics Mock
+  getEnergyStats: async () => {
+    await delay(800);
+    return {
+      savings: 1245.8,
+      carbonOffset: 450.2,
+      forecastedCost: 890.0,
+      efficiencyScore: 88,
+      historicalData: [
+        { month: 'Jan', consumption: 450, baseline: 500 },
+        { month: 'Feb', consumption: 420, baseline: 490 },
+        { month: 'Mar', consumption: 400, baseline: 510 },
+        { month: 'Apr', consumption: 380, baseline: 500 },
+        { month: 'May', consumption: 350, baseline: 520 },
+        { month: 'Jun', consumption: 330, baseline: 530 },
+      ],
+      recommendations: [
+        { id: 1, type: 'reduction', key: 'energy.reductionTip' },
+        { id: 2, type: 'maintenance', key: 'energy.maintenanceTip' }
+      ]
+    };
   }
 };

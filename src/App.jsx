@@ -10,6 +10,7 @@ import Provisioning from './pages/Provisioning';
 import FleetExplorer from './pages/FleetExplorer';
 import AlertRules from './pages/AlertRules';
 import AuditLogs from './pages/AuditLogs';
+import EnergyDashboard from './pages/EnergyDashboard';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import './App.css';
 
@@ -42,6 +43,7 @@ function App() {
             <Route path="map" element={<InteractiveMap />} />
             <Route path="telemetry" element={<FleetExplorer />} />
             <Route path="telemetry/:deviceId" element={<DeviceTelemetry />} />
+            <Route path="energy" element={<EnergyDashboard />} />
             <Route path="settings" element={<Settings />} />
             <Route path="provisioning" element={<Provisioning />} />
             <Route path="rules" element={<AlertRules />} />
