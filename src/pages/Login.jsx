@@ -40,7 +40,7 @@ export default function Login() {
                 <div style={{ zIndex: 1, animation: 'fadeIn 1s ease-out' }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '30px', marginBottom: '2.5rem' }}>
                         <img 
-                          src="/logo.png" 
+                          src="logo.png" 
                           alt="SGA Data Logo" 
                           style={{ height: '140px', width: 'auto', objectFit: 'contain', borderRadius: '12px' }} 
                           onError={(e) => { e.target.style.display = 'none'; }}

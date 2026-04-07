@@ -67,7 +67,7 @@ export default function Layout() {
         <div style={{ marginBottom: '2rem', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
             <img 
-              src="/logo.png" 
+              src="logo.png" 
               alt="SGA Data Logo" 
               style={{ height: '55px', width: 'auto', objectFit: 'contain', borderRadius: '4px' }} 
               onError={(e) => { e.target.style.display = 'none'; }}
