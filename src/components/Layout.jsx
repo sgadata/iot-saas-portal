@@ -5,6 +5,21 @@ import { useTranslation } from 'react-i18next';
 import { useAuth } from '../context/AuthContext';
 
 
+const Logo = ({ size = 45 }) => (
+  <svg width={size} height={size} viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M50 5L89.5 27.5V72.5L50 95L10.5 72.5V27.5L50 5Z" fill="url(#sga_grad)" stroke="var(--accent-primary)" strokeWidth="2"/>
+    <path d="M25 40L35 45M25 60L35 55M75 40L65 45M75 60L65 55" stroke="white" strokeWidth="2" strokeLinecap="round"/>
+    <path d="M50 30L50 70M30 50L70 50" stroke="white" strokeOpacity="0.3" strokeWidth="1"/>
+    <text x="50" y="58" fontFamily="Arial" fontSize="18" fontWeight="bold" fill="white" textAnchor="middle" style={{ letterSpacing: '1px' }}>SGA</text>
+    <defs>
+      <linearGradient id="sga_grad" x1="50" y1="5" x2="50" y2="95" gradientUnits="userSpaceOnUse">
+        <stop stopColor="#00E5FF"/>
+        <stop offset="1" stopColor="#007BFF"/>
+      </linearGradient>
+    </defs>
+  </svg>
+);
+
 export default function Layout() {
   const location = useLocation();
   const { logout, user } = useAuth();
@@ -42,14 +57,9 @@ export default function Layout() {
       <aside className={`sidebar ${isMobileMenuOpen ? 'open' : ''}`}>
         <div style={{ marginBottom: '2rem', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-            <img 
-              src="/logo.png" 
-              alt="SGA Data Logo" 
-              style={{ height: '60px', width: 'auto', objectFit: 'contain', borderRadius: '4px' }} 
-              onError={(e) => { e.target.style.display = 'none'; }}
-            />
+            <Logo size={50} />
             <div style={{ display: 'flex', flexDirection: 'column' }}>
-              <h2 style={{ fontSize: '1.1rem', fontWeight: '800', color: 'white', margin: 0, letterSpacing: '0.02em' }}>SGA DATA</h2>
+              <h2 style={{ fontSize: '1.2rem', fontWeight: '850', color: 'white', margin: 0, letterSpacing: '0.05em' }}>SGA DATA</h2>
               <span style={{ fontSize: '0.6rem', color: 'var(--accent-primary)', fontWeight: '700', textTransform: 'uppercase', marginTop: '-2px' }}>IoT Commander</span>
             </div>
           </div>
