@@ -68,7 +68,7 @@ for (let i = 0; i < 342; i++) {
   
   DATA_CACHE.fleet.push({
     devEui: `A84041000181${(1000 + i).toString()}`,
-    name: `${type.toUpperCase()} Sensor #${i + 1}`,
+    name: `Sensor ${type.toUpperCase()} #${i + 1}`,
     type: type,
     status: status,
     country: 'España',
@@ -76,7 +76,7 @@ for (let i = 0; i < 342; i++) {
     estate: estate.name,
     battery: status === 'orange' ? 12 : Math.floor(Math.random() * (98 - 40) + 40),
     lastSeen: `${Math.floor(Math.random() * 60)}m ago`,
-    statusDetail: status === 'red' ? 'CRITICAL: Alert threshold reached' : (status === 'orange' ? 'Warning: Low Battery' : 'Operativo'),
+    statusDetail: status === 'red' ? 'CRÍTICO: Umbral de alerta alcanzado' : (status === 'orange' ? 'Aviso: Batería baja' : 'Operativo'),
     position: i < 14 ? estate.position : null
   });
 }
