@@ -60,7 +60,7 @@ export default function AdminDashboard() {
               alignItems: 'center',
               gap: '8px'
             }}>
-            {exporting ? 'Generating...' : `📊 ${t('admin.exportBtn')}`}
+            {exporting ? t('admin.generating') : `📊 ${t('admin.exportBtn')}`}
           </button>
         </div>
       </div>

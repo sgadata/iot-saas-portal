@@ -94,7 +94,7 @@ export default function Settings() {
         <h3 style={{ fontSize: '1.125rem', marginBottom: '1.25rem', borderBottom: '1px solid var(--border-color)', paddingBottom: '0.75rem' }}>{t('admin.branding')}</h3>
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '2rem' }}>
           <div>
-            <p style={{ fontSize: '0.875rem', color: 'var(--text-secondary)', marginBottom: '1rem' }}>Corporate Color Scheme</p>
+            <p style={{ fontSize: '0.875rem', color: 'var(--text-secondary)', marginBottom: '1rem' }}>{t('admin.brandingSubtitle')}</p>
             <div style={{ display: 'flex', gap: '10px' }}>
               {['#3b82f6', '#10b981', '#f59e0b', '#ec4899', '#8b5cf6'].map(color => (
                 <button 
@@ -113,13 +113,13 @@ export default function Settings() {
             </div>
           </div>
           <div>
-            <p style={{ fontSize: '0.875rem', color: 'var(--text-secondary)', marginBottom: '1rem' }}>Dashboard Logo</p>
+            <p style={{ fontSize: '0.875rem', color: 'var(--text-secondary)', marginBottom: '1rem' }}>{t('admin.brandingLogo')}</p>
             <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
                <div style={{ width: '100px', height: '40px', background: 'var(--bg-primary)', border: '1px dashed var(--border-color)', borderRadius: '4px', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.7rem' }}>
-                 No logo uploaded
+                 {t('admin.noLogo')}
                </div>
                <button style={{ background: 'transparent', border: '1px solid var(--border-color)', color: 'var(--text-primary)', padding: '8px 12px', borderRadius: '4px', fontSize: '0.75rem', cursor: 'pointer' }}>
-                 Change Logo
+                 {t('admin.changeLogo')}
                </button>
             </div>
           </div>

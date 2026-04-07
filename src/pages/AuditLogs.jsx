@@ -28,7 +28,7 @@ export default function AuditLogs() {
     <div className="animate-fade-in" style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
       <div>
         <h2 style={{ fontSize: '1.875rem', fontWeight: '700' }}>{t('admin.auditLogs')}</h2>
-        <p style={{ color: 'var(--text-secondary)' }}>Security tracking and historical user actions.</p>
+        <p style={{ color: 'var(--text-secondary)' }}>{t('admin.auditLogsSubtitle')}</p>
       </div>
 
       <div className="card">
@@ -37,7 +37,7 @@ export default function AuditLogs() {
             <Search size={18} style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-secondary)' }} />
             <input 
               type="text" 
-              placeholder="Search logs..." 
+              placeholder={t('admin.searchLogs')} 
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               style={{ width: '100%', padding: '12px 12px 12px 40px', background: 'var(--bg-primary)', border: '1px solid var(--border-color)', borderRadius: 'var(--radius-md)', color: 'white' }}
@@ -49,15 +49,15 @@ export default function AuditLogs() {
           <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left' }}>
             <thead>
               <tr style={{ borderBottom: '1px solid var(--border-color)', color: 'var(--text-secondary)', fontSize: '0.875rem' }}>
-                <th style={{ padding: '1rem' }}>Time</th>
-                <th style={{ padding: '1rem' }}>User</th>
-                <th style={{ padding: '1rem' }}>Action</th>
-                <th style={{ padding: '1rem' }}>Target Device</th>
+                <th style={{ padding: '1rem' }}>{t('admin.colTime')}</th>
+                <th style={{ padding: '1rem' }}>{t('admin.colUser')}</th>
+                <th style={{ padding: '1rem' }}>{t('admin.colAction')}</th>
+                <th style={{ padding: '1rem' }}>{t('admin.colTarget')}</th>
               </tr>
             </thead>
             <tbody>
               {loading ? (
-                <tr><td colSpan="4" style={{ textAlign: 'center', padding: '2rem' }}>Loading logs...</td></tr>
+                <tr><td colSpan="4" style={{ textAlign: 'center', padding: '2rem' }}>{t('admin.loading')}</td></tr>
               ) : filteredLogs.map(log => (
                 <tr key={log.id} style={{ borderBottom: '1px solid rgba(255,255,255,0.02)', fontSize: '0.875rem' }}>
                   <td style={{ padding: '1rem', color: 'var(--text-secondary)' }}>
