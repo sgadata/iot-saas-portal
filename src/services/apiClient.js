@@ -11,12 +11,20 @@ const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
 const DATA_CACHE = {
   estates: [
-    { id: 1, name: 'Estate Alpha', position: [40.4168, -3.7038], status: 'green', type: 'water', statusDetail: 'Operativo' },
+    { id: 1, name: 'Estate Alpha', position: [40.4168, -3.7038], status: 'red', type: 'water', statusDetail: 'Flujo de agua anormal detected' },
     { id: 2, name: 'Building Omega', position: [40.4250, -3.6900], status: 'red', type: 'gas', statusDetail: 'Nivel LEL crítico (28%)' },
     { id: 3, name: 'Plaza Center', position: [37.3891, -5.9845], status: 'red', type: 'temp', statusDetail: 'Fallo Crítico: Sensor Temp' },
-    { id: 4, name: 'Greenhouse Sigma', position: [36.8340, -2.4637], status: 'red', type: 'light', statusDetail: 'Sin comunicación (Timeout)' },
+    { id: 4, name: 'Greenhouse Sigma', position: [36.8340, -2.4637], status: 'green', type: 'light', statusDetail: 'Operativo' },
     { id: 5, name: 'Port Complex', position: [41.3851, 2.1734], status: 'green', type: 'water', statusDetail: 'Operativo' },
     { id: 6, name: 'Finca Olivar', position: [38.9168, -6.3438], status: 'green', type: 'valve', statusDetail: 'Operativo' },
+    { id: 7, name: 'Residencial Sol', position: [40.4530, -3.6883], status: 'green', type: 'water', statusDetail: 'Operativo' },
+    { id: 8, name: 'Oficinas Norte', position: [40.4700, -3.6900], status: 'orange', type: 'temp', statusDetail: 'Batería baja (Sensor B4)' },
+    { id: 9, name: 'Almacén Central', position: [40.4300, -3.6700], status: 'green', type: 'gas', statusDetail: 'Operativo' },
+    { id: 10, name: 'Centro Salud', position: [40.4100, -3.7100], status: 'green', type: 'temp', statusDetail: 'Operativo' },
+    { id: 11, name: 'Escuela Infantil', position: [40.4000, -3.7200], status: 'green', type: 'temp', statusDetail: 'Operativo' },
+    { id: 12, name: 'Parking Mall', position: [40.3900, -3.7300], status: 'green', type: 'gas', statusDetail: 'Operativo' },
+    { id: 13, name: 'Huerto Urbano', position: [40.3800, -3.7400], status: 'green', type: 'water', statusDetail: 'Operativo' },
+    { id: 14, name: 'Edificio Sky', position: [40.3700, -3.7500], status: 'green', type: 'light', statusDetail: 'Operativo' },
   ],
   fleet: [
     { devEui: 'A84041000181A001', name: 'Contador General', type: 'water', status: 'green', country: 'España', community: 'Comunidad de Madrid', estate: 'Estate Alpha', battery: 85, lastSeen: '10m ago', statusDetail: 'Operativo' },
@@ -88,7 +96,11 @@ export const apiClient = {
   getGlobalMetrics: async () => {
     if (USE_MOCK_API) {
       await delay(400);
-      return { totalEstates: 14, activeSensors: 342, criticalAlerts: 3 };
+      return { 
+        totalEstates: DATA_CACHE.estates.length, 
+        activeSensors: 342, // Dejamos 342 como numero KPI pro, el cache tiene la muestra representativa
+        criticalAlerts: DATA_CACHE.estates.filter(e => e.status === 'red').length 
+      };
     }
   },
 

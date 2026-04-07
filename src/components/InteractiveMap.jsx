@@ -36,7 +36,7 @@ export default function InteractiveMap() {
   const [loading, setLoading] = useState(true);
   const [commanding, setCommanding] = useState(null); // ID del dispositivo que está recibiendo comando
   const [statusFilter, setStatusFilter] = useState(location.state?.initialStatus || 'all');
-  const [typeFilter, setTypeFilter] = useState('all');
+  const [typeFilter, setTypeFilter] = useState(location.state?.initialType || 'all');
 
   useEffect(() => {
     async function loadData() {

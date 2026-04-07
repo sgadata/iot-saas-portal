@@ -98,12 +98,12 @@ export default function AdminDashboard() {
           <h3 style={{ fontSize: '1.125rem', marginBottom: '1.25rem', borderBottom: '1px solid var(--border-color)', paddingBottom: '0.75rem' }}>{t('dashboard.recentAlerts')}</h3>
           <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
             { [
-              { time: '10 mins ago', message: 'Abnormal water flow detected at Estate Alpha', type: 'critical' },
-              { time: '2 hours ago', message: 'Sensor B4 low battery (15%)', type: 'warning' },
+              { time: '10 mins ago', message: 'Abnormal water flow detected at Estate Alpha', type: 'critical', sensorType: 'water' },
+              { time: '2 hours ago', message: 'Sensor B4 low battery (15%)', type: 'warning', sensorType: 'temp' },
             ].map((alert, idx) => (
               <div 
                 key={idx} 
-                onClick={() => navigate('/map')}
+                onClick={() => navigate('/map', { state: { initialStatus: alert.type === 'critical' ? 'red' : 'orange', initialType: alert.sensorType } })}
                 style={{ display: 'flex', gap: '1rem', alignItems: 'flex-start', padding: '0.75rem', background: 'rgba(255,255,255,0.02)', borderRadius: 'var(--radius-md)', cursor: 'pointer', transition: 'background-color 0.2s' }}
                 onMouseEnter={(e) => e.currentTarget.style.backgroundColor = 'rgba(255,255,255,0.05)'}
                 onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'rgba(255,255,255,0.02)'}
