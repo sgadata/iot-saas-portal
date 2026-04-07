@@ -26,14 +26,7 @@ const DATA_CACHE = {
     { id: 13, name: 'Huerto Urbano', position: [40.3800, -3.7400], status: 'green', type: 'water', statusDetail: 'Operativo' },
     { id: 14, name: 'Edificio Sky', position: [40.3700, -3.7500], status: 'green', type: 'light', statusDetail: 'Operativo' },
   ],
-  fleet: [
-    { devEui: 'A84041000181A001', name: 'Contador General', type: 'water', status: 'green', country: 'España', community: 'Comunidad de Madrid', estate: 'Estate Alpha', battery: 85, lastSeen: '10m ago', statusDetail: 'Operativo' },
-    { devEui: 'A84041000181A002', name: 'Analizador Fuga LEL', type: 'gas', status: 'red', country: 'España', community: 'Comunidad de Madrid', estate: 'Building Omega', battery: 12, lastSeen: '2m ago', config: { uplinkInterval: '10m', alertThreshold: 20 }, statusDetail: 'Alerta: Fuga de Gas (28% LEL)' },
-    { devEui: '2B7E151628AED2A6', name: 'Sala Frío Temp', type: 'temp', status: 'red', country: 'España', community: 'Andalucía', estate: 'Plaza Center', battery: 40, lastSeen: '1h ago', config: { uplinkInterval: '1h' }, statusDetail: 'Fallo Crítico: Sensor Temp' },
-    { devEui: 'A84041000181A004', name: 'Granja Luz LuxSensor', type: 'light', status: 'red', country: 'España', community: 'Andalucía', estate: 'Greenhouse Sigma', battery: 95, lastSeen: '5m ago', config: { uplinkInterval: '30m' }, statusDetail: 'Sin comunicación (Timeout)' },
-    { devEui: 'F8C041000181A005', name: 'Bomba Norte Agua', type: 'water', status: 'green', country: 'España', community: 'Cataluña', estate: 'Port Complex', battery: 60, lastSeen: '30m ago', config: { uplinkInterval: '1h' }, statusDetail: 'Operativo' },
-    { devEui: 'D8C041000181V006', name: 'Válvula Riego Sector 1', type: 'valve', status: 'green', valveStatus: 'closed', schedule: { start: '08:00', end: '09:00', active: false }, country: 'España', community: 'Extremadura', estate: 'Finca Olivar', battery: 88, lastSeen: '1m ago', position: [38.9168, -6.3438], statusDetail: 'Operativo' },
-  ],
+  fleet: [],
   rules: [
     { id: 1, name: 'High Temperature Alert', sensorType: 'temp', condition: '>', threshold: 35, severity: 'critical', active: true },
     { id: 2, name: 'Low Battery Warning', sensorType: 'all', condition: '<', threshold: 15, severity: 'warning', active: true },
@@ -58,6 +51,35 @@ const DATA_CACHE = {
     ]
   }
 };
+
+// --- EL GENERADOR DE COHERENCIA (342 Sensores) ---
+const typesPool = ['water', 'gas', 'temp', 'light', 'valve'];
+const communitiesPool = ['Comunidad de Madrid', 'Andalucía', 'Cataluña', 'Extremadura', 'Castilla y León'];
+
+for (let i = 0; i < 342; i++) {
+  const type = typesPool[i % typesPool.length];
+  const estateIdx = i % DATA_CACHE.estates.length;
+  const estate = DATA_CACHE.estates[estateIdx];
+  const community = communitiesPool[i % communitiesPool.length];
+  
+  let status = 'green';
+  if (i < 3) status = 'red'; // Forzamos 3 críticos para el Dashboard
+  else if (i < 8) status = 'orange'; // Forzamos 5 warnings
+  
+  DATA_CACHE.fleet.push({
+    devEui: `A84041000181${(1000 + i).toString()}`,
+    name: `${type.toUpperCase()} Sensor #${i + 1}`,
+    type: type,
+    status: status,
+    country: 'España',
+    community: community,
+    estate: estate.name,
+    battery: status === 'orange' ? 12 : Math.floor(Math.random() * (98 - 40) + 40),
+    lastSeen: `${Math.floor(Math.random() * 60)}m ago`,
+    statusDetail: status === 'red' ? 'CRITICAL: Alert threshold reached' : (status === 'orange' ? 'Warning: Low Battery' : 'Operativo'),
+    position: i < 14 ? estate.position : null
+  });
+}
 
 export const apiClient = {
   getTopologies: async () => {
@@ -98,8 +120,8 @@ export const apiClient = {
       await delay(400);
       return { 
         totalEstates: DATA_CACHE.estates.length, 
-        activeSensors: 342, // Dejamos 342 como numero KPI pro, el cache tiene la muestra representativa
-        criticalAlerts: DATA_CACHE.estates.filter(e => e.status === 'red').length 
+        activeSensors: DATA_CACHE.fleet.length, 
+        criticalAlerts: DATA_CACHE.fleet.filter(d => d.status === 'red').length 
       };
     }
   },

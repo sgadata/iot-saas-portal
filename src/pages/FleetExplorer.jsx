@@ -39,7 +39,9 @@ export default function FleetExplorer() {
       <div className="dashboard-grid" style={{ display: 'grid', gridTemplateColumns: '1fr auto', gap: '1rem', alignItems: 'center' }}>
         <div>
           <h2 style={{ fontSize: '1.875rem', fontWeight: '700' }}>{t('fleet.title')}</h2>
-          <p style={{ color: 'var(--text-secondary)' }}>{t('fleet.subtitle')}</p>
+          <p style={{ color: 'var(--text-secondary)' }}>
+            {t('fleet.subtitle')} | <span style={{ color: 'var(--accent-primary)', fontWeight: '600' }}>{fleet.length} total sensors</span> detected
+          </p>
         </div>
       </div>
 
