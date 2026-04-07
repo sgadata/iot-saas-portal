@@ -16,8 +16,14 @@ export default function Layout() {
     { key: 'liveMap', path: '/map', icon: <Map size={20} />, roles: ['admin', 'tecnico'] },
     { key: 'telemetry', path: '/telemetry', icon: <Activity size={20} />, roles: ['admin', 'tecnico'] },
     { key: 'settings', path: '/settings', icon: <Settings size={20} />, roles: ['admin'] },
-    { key: 'provisioning', name: 'Add Sensor', path: '/provisioning', icon: <PlusSquare size={20} />, roles: ['admin', 'tecnico'] } 
-  ].filter(item => item.roles.includes(user?.role || 'admin'));
+    { key: 'provisioning', name: 'Add Sensor', path: '/provisioning', icon: <PlusSquare size={20} />, roles: ['admin', 'tecnico'], requiresProvisioning: true } 
+  ].filter(item => {
+    const hasRole = item.roles.includes(user?.role || '');
+    if (item.requiresProvisioning) {
+      return hasRole && user?.canProvision;
+    }
+    return hasRole;
+  });
 
   return (
     <div className="app-container">

@@ -1,10 +1,13 @@
 import React, { useState, useEffect } from 'react';
+import { Navigate } from 'react-router-dom';
 import { Cpu, Key, MapPin, Tag, CheckCircle } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
+import { useAuth } from '../context/AuthContext';
 import { apiClient } from '../services/apiClient';
 
 export default function Provisioning() {
   const { t } = useTranslation();
+  const { user } = useAuth();
   const [estates, setEstates] = useState([]);
   const [form, setForm] = useState({ devEui: '', appKey: '', type: 'water', estateId: '' });
   const [status, setStatus] = useState('idle');
@@ -31,6 +34,10 @@ export default function Provisioning() {
         }, 3000);
     }
   };
+
+  if (!user?.canProvision) {
+    return <Navigate to="/" replace />;
+  }
 
   return (
     <div className="animate-fade-in" style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
