@@ -8,24 +8,62 @@ import ValvePopup from './map/popups/ValvePopup';
 import SensorPopup from './map/popups/SensorPopup';
 import GatewayPopup from './map/popups/GatewayPopup';
 import 'leaflet/dist/leaflet.css';
-
-// Registro de Iconos Leaflet
 import L from 'leaflet';
-import iconShadow from 'leaflet/dist/images/marker-shadow.png';
+import { renderToString } from 'react-dom/server';
+import { 
+  Activity, 
+  Droplet, 
+  Flame, 
+  Thermometer, 
+  Sun, 
+  Settings2, 
+  Radio, 
+  Building2 
+} from 'lucide-react';
 
-const createIcon = (color) => L.icon({
-    iconUrl: `https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-${color}.png`,
-    shadowUrl: iconShadow,
-    iconSize: [25, 41],
-    iconAnchor: [12, 41]
-});
+// Motor de Iconos Inteligentes (Color = Estado, Símbolo = Tipo)
+const getMarkerIcon = (device) => {
+    const status = device.status || 'green';
+    const type = device.type;
+    const isEstate = !!device.id;
 
-const StatusIcons = {
-    green: createIcon('green'),
-    orange: createIcon('orange'),
-    red: createIcon('red'),
-    blue: createIcon('blue'),
-    violet: createIcon('violet') // Nuevo para Infraestructura (Gateway)
+    // 1. Determinar el Símbolo (Lucide Icon)
+    let IconNode = Activity;
+    if (isEstate) IconNode = Building2;
+    else if (type === 'water') IconNode = Droplet;
+    else if (type === 'gas') IconNode = Flame;
+    else if (type === 'temp') IconNode = Thermometer;
+    else if (type === 'light') IconNode = Sun;
+    else if (type === 'valve') IconNode = Settings2;
+    else if (type === 'gateway') IconNode = Radio;
+
+    // 2. Determinar el Color (Health Status)
+    const colorMap = {
+        green: '#238636',
+        orange: '#d29922',
+        red: '#f85149',
+        blue: '#3b82f6'
+    };
+    const bgColor = isEstate ? colorMap.blue : colorMap[status];
+
+    // 3. Generar el HTML del Marcador
+    const iconHtml = renderToString(
+        <div className={`custom-marker-container ${status === 'red' ? 'status-red' : ''}`}>
+            <div className="marker-pin" style={{ backgroundColor: bgColor }}>
+                <div className="marker-icon-wrapper">
+                    <IconNode size={16} strokeWidth={2.5} color="white" />
+                </div>
+            </div>
+        </div>
+    );
+
+    return L.divIcon({
+        html: iconHtml,
+        className: 'custom-div-icon',
+        iconSize: [32, 32],
+        iconAnchor: [16, 32],
+        popupAnchor: [0, -32]
+    });
 };
 
 export default function InteractiveMap() {
@@ -95,19 +133,6 @@ export default function InteractiveMap() {
     );
   };
 
-  const getMarkerIcon = (device) => {
-    const schema = DEVICE_SCHEMAS[device.type] || DEVICE_SCHEMAS.default;
-    
-    // Prioridad 1: Gateways (Icono Violeta fijo)
-    if (device.type === 'gateway') return StatusIcons.violet;
-    
-    // Prioridad 2: Fincas (Icono por su estado)
-    if (device.id) return StatusIcons[device.status] || StatusIcons.blue;
-    
-    // Prioridad 3: Sensores normales (Icono por el color del schema)
-    return StatusIcons[schema.iconColor] || StatusIcons.blue;
-  };
-
   return (
     <div className="animate-fade-in" style={{ display: 'flex', flexDirection: 'column', gap: '1rem', height: '100%' }}>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', flexWrap: 'wrap', gap: '1rem' }}>
@@ -161,6 +186,42 @@ export default function InteractiveMap() {
             ))
           }
         </MapContainer>
+
+        {/* Legend Flotante Premium */}
+        <div style={{ position: 'absolute', bottom: '20px', right: '20px', zIndex: 1000, background: 'rgba(13, 17, 23, 0.85)', backdropFilter: 'blur(8px)', padding: '16px', borderRadius: '12px', border: '1px solid var(--border-color)', display: 'flex', flexDirection: 'column', gap: '12px', boxShadow: '0 8px 32px rgba(0,0,0,0.4)', minWidth: '220px' }}>
+            <div>
+                <span style={{ fontSize: '0.65rem', fontWeight: '800', color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: '0.05em', display: 'block', marginBottom: '8px' }}>{t('map.legend_status')}</span>
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '0.7rem' }}>
+                        <div style={{ width: '12px', height: '12px', borderRadius: '50%', background: '#238636' }}></div> {t('map.normal')}
+                    </div>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '0.7rem' }}>
+                        <div style={{ width: '12px', height: '12px', borderRadius: '50%', background: '#d29922' }}></div> {t('map.warning')}
+                    </div>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '12px', gridColumn: 'span 2' }}>
+                        <div style={{ width: '12px', height: '12px', borderRadius: '50%', background: '#f85149', boxShadow: '0 0 8px #f85149' }}></div> {t('map.critical')}
+                    </div>
+                </div>
+            </div>
+
+            <div style={{ borderTop: '1px solid var(--border-color)', paddingTop: '8px' }}>
+                <span style={{ fontSize: '0.65rem', fontWeight: '800', color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: '0.05em', display: 'block', marginBottom: '8px' }}>{t('map.legend_types')}</span>
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '0.7rem' }}>
+                        <Droplet size={14} color="var(--text-secondary)" /> {t('types.water')}
+                    </div>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '0.7rem' }}>
+                        <Settings2 size={14} color="var(--text-secondary)" /> {t('types.valve')}
+                    </div>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '0.7rem' }}>
+                        <Radio size={14} color="var(--text-secondary)" /> {t('types.gateway')}
+                    </div>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '0.7rem' }}>
+                        <Flame size={14} color="var(--text-secondary)" /> {t('types.gas')}
+                    </div>
+                </div>
+            </div>
+        </div>
       </div>
     </div>
   );

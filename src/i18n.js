@@ -54,7 +54,9 @@ const resources = {
         "filterStatus": "Filter by Status",
         "filterType": "Filter by Type",
         "allStatuses": "All Statuses",
-        "allTypes": "All Types"
+        "allTypes": "All Types",
+        "legend_status": "Device Health",
+        "legend_types": "Device Types"
       },
       "telemetry": {
         "title": "Sensor Analytics",
@@ -271,7 +273,9 @@ const resources = {
         "filterStatus": "Filtrar por Estado",
         "filterType": "Filtrar por Tipo",
         "allStatuses": "Todos los Estados",
-        "allTypes": "Todos los Tipos"
+        "allTypes": "Todos los Tipos",
+        "legend_status": "Salud del Dispositivo",
+        "legend_types": "Tipos de Activos"
       },
       "telemetry": {
         "title": "Analítica del Sensor",
