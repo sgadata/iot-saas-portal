@@ -219,6 +219,12 @@ export default function InteractiveMap() {
                     <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '0.7rem' }}>
                         <Flame size={14} color="var(--text-secondary)" /> {t('types.gas')}
                     </div>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '0.7rem' }}>
+                        <Thermometer size={14} color="var(--text-secondary)" /> {t('types.temp')}
+                    </div>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '0.7rem' }}>
+                        <Sun size={14} color="var(--text-secondary)" /> {t('types.light')}
+                    </div>
                 </div>
             </div>
         </div>
