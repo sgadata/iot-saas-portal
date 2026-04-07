@@ -42,19 +42,12 @@ export default function Layout() {
       <aside className={`sidebar ${isMobileMenuOpen ? 'open' : ''}`}>
         <div style={{ marginBottom: '2rem', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-            {/* SGA DATA SVG LOGO */}
-            <svg width="45" height="45" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M50 5L89.5 27.5V72.5L50 95L10.5 72.5V27.5L50 5Z" fill="url(#paint0_linear)" stroke="var(--accent-primary)" strokeWidth="2"/>
-              <path d="M30 40H70V60H30V40Z" fill="white" fillOpacity="0.1"/>
-              <circle cx="50" cy="50" r="15" stroke="white" strokeWidth="1" strokeDasharray="2 2"/>
-              <path d="M25 30L35 35M25 70L35 65M75 30L65 35M75 70L65 65" stroke="var(--accent-primary)" strokeWidth="2"/>
-              <defs>
-                <linearGradient id="paint0_linear" x1="50" y1="5" x2="50" y2="95" gradientUnits="userSpaceOnUse">
-                  <stop stopColor="#3b82f6"/>
-                  <stop offset="1" stopColor="#1e3a8a"/>
-                </linearGradient>
-              </defs>
-            </svg>
+            <img 
+              src="/logo.png" 
+              alt="SGA Data Logo" 
+              style={{ height: '60px', width: 'auto', objectFit: 'contain', borderRadius: '4px' }} 
+              onError={(e) => { e.target.style.display = 'none'; }}
+            />
             <div style={{ display: 'flex', flexDirection: 'column' }}>
               <h2 style={{ fontSize: '1.1rem', fontWeight: '800', color: 'white', margin: 0, letterSpacing: '0.02em' }}>SGA DATA</h2>
               <span style={{ fontSize: '0.6rem', color: 'var(--accent-primary)', fontWeight: '700', textTransform: 'uppercase', marginTop: '-2px' }}>IoT Commander</span>
